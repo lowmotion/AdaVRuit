@@ -7,6 +7,8 @@
 
 #include "main.h"
 
-void main() {
+uint8_t matrix[8][2];
 
+int main() {
+	return 0;
 }

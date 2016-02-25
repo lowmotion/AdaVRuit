@@ -12,4 +12,8 @@
 
 void initATMega32();
 
+void TWI_sendByte(uint8_t ui_adress, uint8_t ui_data);
+
+void TWI_sendArray(uint8_t ui_data[8][2]);
+
 #endif /* ATMEGA32_H_ */

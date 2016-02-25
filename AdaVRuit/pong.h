@@ -20,5 +20,12 @@
 #define FIRST_COLUMN	0			// Index der ersten Spalte
 #define LAST_COLUMN		COLUMNS - 1	// Index der letzten Spalte
 
+/* Funktionen */
+void initPong();
+void playPong();
+void calcBallPosition();
+void processInput();
+void printPong();
+void Goal(struct Player player);
 
 #endif /* PONG_H_ */

@@ -32,6 +32,7 @@ struct Player {
 
 struct Ball ball;
 struct Player playerL, playerR;
+uint8_t ui_timerFlag;
 
 
 /* Funktion: 		initPong
@@ -43,19 +44,6 @@ void initPong() {
 
 }
 
-/*
- *
- */
-void printGameBoard() {
-
-}
-
-/*
- *
- */
-void inputUserControls() {
-
-}
 
 /*	Funktion: 		Timer Interrupt Service Routine
  * 	Beschreibung: 	Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
@@ -63,8 +51,24 @@ void inputUserControls() {
  *
  */
 ISR(TIMER0_COMP_vect) {
-	calcBallPosition();
+	ui_timerFlag = 1;
 }
+
+/*
+ * Funktion:		Goal
+ * Beschreibung:	Diese Funktion incrementiert den Spielstand (Variable goal im struct)
+ * 					des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
+ * 					Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
+ * 					des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
+ */
+void Goal(struct Player player){
+	// Punkt z�hlen f�r Spieler player
+
+	// verr�ckte Ausgabe machen, dass ein Punkt gefallen ist
+
+	// Spielball neu Initialisieren
+
+};
 
 /* Funktion:		calcBallPosition
  * Beschreibung:	Berechnet die Position des Balls neu. Hierbei werden die derzeitige Bewegungsrichtung
@@ -122,34 +126,92 @@ void calcBallPosition() {
 	ball.posY = ball.prevY + movY;
 };
 
+
+
 /*
- * Funktion:		Goal
- * Beschreibung:	Diese Funktion incrementiert den Spielstand (Variable goal im struct)
- * 					des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
- * 					Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
- * 					des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
+ * Funktion:			processInput
+ * Beschreibung: 		Verarbeitet die Eingabe der Taster der Spieler und bewegt die Schläger nach oben bzw. unten
+ * Globale Variablen:	playerL, playerR
  */
-void Goal(struct Player player){
-	// Punkt z�hlen f�r Spieler player
+void processInput(uint8_t ui_buttons){
+    // Bewegung des linken Schl�gers
+    if(ui_player1_L(ui_buttons) == 1){                         // Bewegung nach oben
+        playerL.prevY = playerL.posY;
+        playerL.posY -= 1;
+    }
+    if(ui_player1_D(ui_buttons) == 1){                         // Bewegung nach unten
+        playerL.prevY = playerL.posY;
+        playerL.posY += 1;
+    }
 
-	// verr�ckte Ausgabe machen, dass ein Punkt gefallen ist
+    // Bewegung des rechten Schl�gers
+    if(ui_player2_U(ui_buttons) == 1){                         // Bewegung nach oben
+        playerR.prevY = playerR.posY;
+        playerR.posY -= 1;
+    }
+    if(ui_player2_D(ui_buttons) == 1){                         // Bewegung nach unten
+        playerR.prevY = playerR.posY;
+        playerR.posY += 1;
+    }
+}
 
-	// Spielball neu Initialisieren
+// Beschreibung:            Diese Funktion gibt die Bewebung des Balles und der beiden Schl�ger auf der LED Matrix aus
+// Ben�tigte Variablen:     ball, playerL, playerR
+/* Funktion: 				printPong
+ * Beschreibung:            Diese Funktion gibt die Bewebung des Balles und der beiden Schl�ger auf der LED Matrix aus
+ * Globale Variablen:		ball, playerL, playerR
+ */
+void printPong(){
+    // Ausgabe des Balls
+    if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
+        printBit(ball.posX, ball.posY, LED_ON);
+        printBit(ball.prevX, ball.prevY, LED_OFF);
+    }
 
-};
+    // Ausgabe der Schl�ger
+    // Schl�ger Links
+    if (playerL.posY != playerL.prevY){
+        if(playerL.posY > playerL.prevY){           // Bewegung nach unten
+            printBit(0, playerL.posY+1, LED_ON);
+            printBit(0, playerL.prevY-1, LED_OFF);
+        }
+        else{                                       // Bewegung nach oben
+            printBit(0, playerL.posY-1, LED_ON);
+            printBit(0, playerL.prevY+1, LED_OFF);
+        }
+    }
 
+    // Schl�ger Rechts
+    if (playerR.posY != playerR.prevY){
+        if(playerR.posY > playerR.prevY){           // Bewegung  nach unten
+            printBit(15, playerR.posY+1, LED_ON);
+            printBit(15, playerR.prevY-1, LED_OFF);
+        }
+        else {                                        // Bewegung nach oben
+            printBit(15, playerR.posY-1, LED_ON);
+            printBit(15, playerR.prevY+1, LED_OFF);
+        }
+    }
+}
 
+/*
+ * Funktion:		playPong
+ * Beschreibung:	Hauptfunktion
+ */
 void playPong() {
 	short play = 1;
-
+	uint8_t ui_buttons;
 	initPong();
 
 	while(play) {
-		printGameBoard();
-		inputUserControls();
-
-
-		//play = 0;
+        ui_buttons = eingabe();
+		if(ui_timerFlag == 1){
+			calcBallPosition();
+			movecurer(ui_buttons);
+			ui_buttons = 0;
+			printPong();
+			ui_timerFlag = 0;
+		}
 	}
 }
 

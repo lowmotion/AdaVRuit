@@ -11,6 +11,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include "ATmega32.h"
+#include "pong.h"
+
 #define LED_ON	1
 #define LED_OFF	0
 

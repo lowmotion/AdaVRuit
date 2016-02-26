@@ -2,15 +2,15 @@
  * ATmega32.c
  *
  *  Created on: Feb 11, 2016
- *      Author: marco
+ *      Author: Marco, Michael, Michel, Christian, Tobias
  */
 
 #include "ATmega32.h"
 
 void initATMega32() {
 	/* Taster */
-    DDRB = 0b10001101;       // Eingänge PortB 1 3 2 6
-    DDRF = 0b11110000;       // Eingänge PortF 4 5 6 7
+    DDRB = 0b10110001;       // Eingänge PortB 1 3 2 6
+    DDRF = 0b00001111;       // Eingänge PortF 4 5 6 7
 }
 
 void initTWI() {
@@ -26,20 +26,20 @@ void TWI_sendArray(uint8_t ui_data[8][2]) {
 }
 
 // Diese Funktionen geben die Zahl = 1, wenn der Taster gedr�ckt ist - =0 wenn der Taster nicht gedr�ckt ist
-uint8_t ui_player1_L(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x80) >> 7);}
-uint8_t ui_player1_R(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x20) >> 6);}
-uint8_t ui_player1_U(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x20) >> 5);}
-uint8_t ui_player1_D(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x10) >> 4);}
-uint8_t ui_player2_L(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x04) >> 3);}
-uint8_t ui_player2_R(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x04) >> 2);}
-uint8_t ui_player2_U(uint8_t _ui_buttons) {return ((_ui_buttons &= 0x02) >> 1);}
-uint8_t ui_player2_D(uint8_t _ui_buttons) {return (_ui_buttons &= 0x01);}
+uint8_t ui_player1_L(uint8_t _ui_buttons) {return ((_ui_buttons & 0x80) >> 7);}
+uint8_t ui_player1_R(uint8_t _ui_buttons) {return ((_ui_buttons & 0x40) >> 6);}
+uint8_t ui_player1_U(uint8_t _ui_buttons) {return ((_ui_buttons & 0x20) >> 5);}
+uint8_t ui_player1_D(uint8_t _ui_buttons) {return ((_ui_buttons & 0x10) >> 4);}
+uint8_t ui_player2_L(uint8_t _ui_buttons) {return ((_ui_buttons & 0x08) >> 3);}
+uint8_t ui_player2_R(uint8_t _ui_buttons) {return ((_ui_buttons & 0x04) >> 2);}
+uint8_t ui_player2_U(uint8_t _ui_buttons) {return ((_ui_buttons & 0x02) >> 1);}
+uint8_t ui_player2_D(uint8_t _ui_buttons) {return (_ui_buttons & 0x01);}
 
 void resetPlayer1_L(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x80);}
-void resetPlayer1_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x20);}
+void resetPlayer1_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x40);}
 void resetPlayer1_U(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x20);}
 void resetPlayer1_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x10);}
-void resetPlayer2_L(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x04);}
+void resetPlayer2_L(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x08);}
 void resetPlayer2_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x04);}
 void resetPlayer2_U(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x02);}
 void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x01);}
@@ -74,19 +74,19 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~0x01);}
  *                         		Bit 3/7 -> Down
  */
 uint8_t ui_eingabe(){
-    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons;
+    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
     ui_bufferPF = ~PINF;
     ui_bufferPB = ~PINB;
 
-    if((ui_bufferPF &= 0x10) >0) ui_buttons = ((ui_bufferPF &= 0x10) << 3);     // Bit 4 -> 7
-    if((ui_bufferPF &= 0x20) >0) ui_buttons = ((ui_bufferPF &= 0x20) << 1);     // Bit 5 -> 6
-    if((ui_bufferPF &= 0x40) >0) ui_buttons = ((ui_bufferPF &= 0x40) >> 1);     // Bit 6 -> 5
-    if((ui_bufferPF &= 0x40) >0) ui_buttons = ((ui_bufferPF &= 0x40) >> 3);     // Bit 7 -> 4
+    if((ui_bufferPF & 0x10) >0) ui_buttons |= ((ui_bufferPF & 0x10) << 3);     // Bit 4 -> Bit 7 in ui_buttons
+    if((ui_bufferPF & 0x20) >0) ui_buttons |= ((ui_bufferPF & 0x20) << 1);     // Bit 5 -> Bit 6 in ui_buttons
+    if((ui_bufferPF & 0x40) >0) ui_buttons |= ((ui_bufferPF & 0x40) >> 1);     // Bit 6 -> Bit 5 in ui_buttons
+    if((ui_bufferPF & 0x80) >0) ui_buttons |= ((ui_bufferPF & 0x80) >> 3);     // Bit 7 -> Bit 4 in ui_buttons
 
-    if((ui_bufferPB &= 0x02) >0) ui_buttons = ((ui_bufferPB &= 0x02) << 2);     // Bit 1 -> 3
-    if((ui_bufferPB &= 0x08) >0) ui_buttons = ((ui_bufferPB &= 0x08) >> 1);     // Bit 3 -> 2
-    if((ui_bufferPB &= 0x04) >0) ui_buttons = ((ui_bufferPB &= 0x04) >> 1);     // Bit 2 -> 1
-    if((ui_bufferPB &= 0x40) >0) ui_buttons = ((ui_bufferPB &= 0x40) >> 6);     // Bit 6 -> 0
+    if((ui_bufferPB & 0x02) >0) ui_buttons |= ((ui_bufferPB & 0x02) << 2);     // Bit 1 -> Bit 3 in ui_buttons
+    if((ui_bufferPB & 0x08) >0) ui_buttons |= ((ui_bufferPB & 0x08) >> 1);     // Bit 3 -> Bit 2 in ui_buttons
+    if((ui_bufferPB & 0x04) >0) ui_buttons |= ((ui_bufferPB & 0x04) >> 1);     // Bit 2 -> Bit 1 in ui_buttons
+    if((ui_bufferPB & 0x40) >0) ui_buttons |= ((ui_bufferPB & 0x40) >> 6);     // Bit 6 -> Bit 0 in ui_buttons
 
 	return ui_buttons;
 }

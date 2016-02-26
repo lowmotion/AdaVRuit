@@ -78,15 +78,70 @@ uint8_t ui_eingabe(){
     ui_bufferPF = ~PINF;
     ui_bufferPB = ~PINB;
 
-    if((ui_bufferPF & 0x10) >0) ui_buttons |= ((ui_bufferPF & 0x10) << 3);     // Bit 4 -> Bit 7 in ui_buttons
-    if((ui_bufferPF & 0x20) >0) ui_buttons |= ((ui_bufferPF & 0x20) << 1);     // Bit 5 -> Bit 6 in ui_buttons
-    if((ui_bufferPF & 0x40) >0) ui_buttons |= ((ui_bufferPF & 0x40) >> 1);     // Bit 6 -> Bit 5 in ui_buttons
-    if((ui_bufferPF & 0x80) >0) ui_buttons |= ((ui_bufferPF & 0x80) >> 3);     // Bit 7 -> Bit 4 in ui_buttons
+    ui_buttons |= ((ui_bufferPF & 0x10) << 3);     // Bit 4 -> Bit 7 in ui_buttons
+    ui_buttons |= ((ui_bufferPF & 0x20) << 1);     // Bit 5 -> Bit 6 in ui_buttons
+    ui_buttons |= ((ui_bufferPF & 0x40) >> 1);     // Bit 6 -> Bit 5 in ui_buttons
+    ui_buttons |= ((ui_bufferPF & 0x80) >> 3);     // Bit 7 -> Bit 4 in ui_buttons
 
-    if((ui_bufferPB & 0x02) >0) ui_buttons |= ((ui_bufferPB & 0x02) << 2);     // Bit 1 -> Bit 3 in ui_buttons
-    if((ui_bufferPB & 0x08) >0) ui_buttons |= ((ui_bufferPB & 0x08) >> 1);     // Bit 3 -> Bit 2 in ui_buttons
-    if((ui_bufferPB & 0x04) >0) ui_buttons |= ((ui_bufferPB & 0x04) >> 1);     // Bit 2 -> Bit 1 in ui_buttons
-    if((ui_bufferPB & 0x40) >0) ui_buttons |= ((ui_bufferPB & 0x40) >> 6);     // Bit 6 -> Bit 0 in ui_buttons
+    ui_buttons |= ((ui_bufferPB & 0x02) << 2);     // Bit 1 -> Bit 3 in ui_buttons
+    ui_buttons |= ((ui_bufferPB & 0x08) >> 1);     // Bit 3 -> Bit 2 in ui_buttons
+    ui_buttons |= ((ui_bufferPB & 0x04) >> 1);     // Bit 2 -> Bit 1 in ui_buttons
+    ui_buttons |= ((ui_bufferPB & 0x40) >> 6);     // Bit 6 -> Bit 0 in ui_buttons
 
 	return ui_buttons;
+}
+
+/* Beschreibung:	Die (überladene) Funktionen fragen beim Aufruf die zugehörigen Pins ab. 
+ * 			Sie geben eine 0x01 zurück, falls die Taste gedrückt ist. ansonten = 0x00
+ * 			Es findet bisher kein Entprellen statt.
+ * Globale Variablen:	Keine
+ */
+uint8_t ui_player1_L() {
+    	uint8_t ui_bufferPF = 0x00;
+    	ui_bufferPF = ~PINF;
+	if((ui_bufferPF & 0x10) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player1_R() {
+    	uint8_t ui_bufferPF = 0x00;
+    	ui_bufferPF = ~PINF;
+	if((ui_bufferPF & 0x20) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player1_U() {
+    	uint8_t ui_bufferPF = 0x00;
+    	ui_bufferPF = ~PINF;
+	if((ui_bufferPF & 0x40) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player1_D() {
+    	uint8_t ui_bufferPF = 0x00;
+    	ui_bufferPF = ~PINF;
+	if((ui_bufferPF & 0x80) >0) return 0x01;
+	else return 0x00;
+}
+
+uint8_t ui_player2_L() {
+	uint8_t  ui_bufferPB = 0x00;
+	ui_bufferPB = ~PINB;
+	if((ui_bufferPB & 0x02) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player2_R() {
+	uint8_t  ui_bufferPB = 0x00;
+	ui_bufferPB = ~PINB;
+	if((ui_bufferPB & 0x08) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player2_U() {
+	uint8_t  ui_bufferPB = 0x00;
+	ui_bufferPB = ~PINB;
+	if((ui_bufferPB & 0x04) >0) return 0x01;
+	else return 0x00;
+}
+uint8_t ui_player2_D() {
+	uint8_t  ui_bufferPB = 0x00;
+	ui_bufferPB = ~PINB;
+	if((ui_bufferPB & 0x40) >0) return 0x01;
+	else return 0x00;
 }

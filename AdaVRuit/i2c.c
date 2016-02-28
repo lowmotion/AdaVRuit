@@ -31,7 +31,7 @@ void sendOneByteI2C(uint8_t ui_adres, uint8_t ui_data){
 	while((TWCR & (1 << TWINT)) == 0){};					// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
 
 	// Stoppbedingung
-	TWCR = (1 << TWINT) | (1 << TWST) | (1 << TWEN);		// Stoppbedingung
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);		// Stoppbedingung
 }
 
 
@@ -61,7 +61,7 @@ void sendTwoByteI2C(uint8_t ui_adres, uint8_t ui_data1, uint8_t ui_data2){
 	while((TWCR & (1 << TWINT)) == 0){};					// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
 
 	// Stoppbedingung
-	TWCR = (1 << TWINT) | (1 << TWST) | (1 << TWEN);		// Stoppbedingung
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);		// Stoppbedingung
 }
 
 
@@ -99,5 +99,5 @@ void sendLedDataI2C(uint8_t ui_adres, uint8_t ui_data[16], uint8_t ui_numberOfDa
 	}
 
 	// Stoppbedingung
-	TWCR = (1 << TWINT) | (1 << TWST) | (1 << TWEN);		// Stoppbedingung
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);		// Stoppbedingung
 }

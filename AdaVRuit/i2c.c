@@ -1,13 +1,13 @@
 
 
-/* Beschreibung:		  Initialisierung des I2C
- *						        Einstellung des SCL = (CPU_CLOCK)/(16+2*(TWBR)*4^(TWSR))
- *						        Bustakt wurde auf rund 15,4kHz gesetzt.
+/* Beschreibung:	Initialisierung des I2C
+ *			Einstellung des SCL = (CPU_CLOCK)/(16+2*(TWBR)*4^(TWSR))
+ *			Bustakt wurde auf rund 100kHz gesetzt.
  * Gloable Variablen:	Keine
  */
 void initI2C(){
-	TWBR |=	0x04;	// -> sollte bei einem Master > 10 sein -> wurde auf = 32 gesetzt
-	TWSR |= 0x02;	// Prescale = 4^TWSR = 16
+	TWBR |=	0xA3;	// -> sollte bei einem Master > 10 sein -> wurde auf = 18 gesetzt
+	TWSR |= 0x01;	// Prescale = 4^TWSR = 4
 	TWCR = (1 << TWEN);
 }
 
@@ -19,7 +19,7 @@ void initI2C(){
 void startTWI(){
 	// Startbedingung
 	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);		// Startbedingung
-	while((TWCR & (1 << TWINT)) == 0){};				// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
+	while(!(TWCR & (1 << TWINT))){};				// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
 }
 
 
@@ -30,7 +30,7 @@ void sendTWI(uint8_t ui_data){
 	// Senden der Daten
 	TWDR = ui_data;							// Adresse
 	TWCR = (1 << TWINT) | (1 << TWEN);				// Senden
-	while((TWCR & (1 << TWINT)) == 0){};				// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
+	while(!(TWCR & (1 << TWINT))){};				// Warten bis TWINT-Bit (des Registers TWCR) == 1 -> fertig
 }
 
 

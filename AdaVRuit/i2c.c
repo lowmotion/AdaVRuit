@@ -6,7 +6,7 @@
  * Gloable Variablen:	Keine
  */
 void initI2C(){
-	TWBR |=	0xA3;	// -> sollte bei einem Master > 10 sein -> wurde auf = 18 gesetzt
+	TWBR |=	0x12;	// -> sollte bei einem Master > 10 sein -> wurde auf = 18 gesetzt
 	TWSR |= 0x01;	// Prescale = 4^TWSR = 4
 	TWCR = (1 << TWEN);
 }

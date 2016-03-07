@@ -38,9 +38,9 @@ void twi_stop(void);
 
 uint8_t twi_write(uint8_t data);
 
-void TWI_sendByte(uint8_t offset, uint8_t byte);
+void twi_sendByte(uint8_t offset, uint8_t byte);
 
-void TWI_sendArray(int8_t ui_matrix[8][2]);
+void twi_sendArray(int8_t ui_matrix[8][2]);
 
 
 #endif /* TWI_H_ */

@@ -1,9 +1,20 @@
-/*
- * pong.h
- *
- *  Created on: Feb 11, 2016
- *      Author: marco
- */
+ /*****************************************************************************
+*
+* FILE: 		      pong.h
+* PROJECT:	      Spielekonsole
+* MODULE:		      ???
+*
+* Description:		Header zu pong.c
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date:   11.02.2016
+* BY:	    Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
 
 #ifndef PONG_H_
 #define PONG_H_

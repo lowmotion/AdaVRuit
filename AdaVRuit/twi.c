@@ -195,7 +195,7 @@ uint8_t twi_write(uint8_t data)
 * Date: By: Description:
 *
 **************************************************************************/
-TWI_sendByte(uint8_t offset, uint8_t byte){
+void twi_sendByte(uint8_t offset, uint8_t byte){
 	twi_start(LED_ADRESS_TWI);
 	twi_write(offset);
 	twi_write(byte);
@@ -223,7 +223,7 @@ TWI_sendByte(uint8_t offset, uint8_t byte){
 * Date: By: Description:
 *
 **************************************************************************/
-TWI_sendArray(int8_t ui_matrix[8][2]){
+void twi_sendArray(int8_t ui_matrix[8][2]){
 	twi_start(LED_ADRESS_TWI);
 	twi_write(0x00);		// Senden des Offsets
 	for(uint8_t row = 0; row < 8; row++){

@@ -1,32 +1,41 @@
-/*
- * pong.c
- *
- *      Author: marco
- *      File:
- *      Project:
- *      Module:
- *
- *      Description:
- *
- *      Created on: Feb 11, 2016
- */
+
+/*****************************************************************************
+*
+* FILE: 		pong.c
+* PROJECT:		Spielekonsole
+* MODULE:		???
+*
+* Description:		Diese Datei enthällt die Hauptroutine und alle Funktionen des Speiels "Pong"
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date: 07.03.2016
+* BY:	Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
+ 
+ 
 
 #include "pong.h"
 
 
-/*	Struktur: 		Ball
+/*	Struktur: 	Ball
  * 	Beschreibung: 	Diese Struktur stellt den Spielball dar.
  */
 struct Ball {
 	uint8_t posX, posY, prevX, prevY;
 };
 
-/*	Struktur: 		Player (Spieler)
+/*	Struktur: 	Player (Spieler)
  * 	Beschreibung: 	Diese Struktur stellt einen Spieler dar.
  */
 struct Player {
 	uint8_t posX, posY, prevX, prevY, width, goals;
 };
+
 
 /* Globale Variablen */
 
@@ -35,32 +44,80 @@ struct Player playerL, playerR;
 uint8_t ui_timerFlag;
 
 
-/* Funktion: 		initPong
- * Beschreibung: 	Diese Funktion initialisiert das Spiel Pong. Es werden zwei Spieler initialisiert
- * 					und auf dem Spielfeld positioniert. Jeweils links und rechts oben in den Ecken.
- * 					Außerdem wird der Spielball so positioniert, dass der linke Spieler anfängt. (Zeile 4 Spalte 8)
- */
+ /**************************************************************************
+* NAME:			initPong
+* Description:		Diese Funktion initialisiert das Spiel Pong. Es werden zwei Spieler initialisiert
+* 			und auf dem Spielfeld positioniert. Jeweils links und rechts oben in den Ecken.
+* 			Außerdem wird der Spielball so positioniert, dass der linke Spieler anfängt. (Zeile 4 Spalte 8)
+*
+* Subroutines Called:	???
+*
+* Returns:		keine
+*
+* Globals:		Ball ball; Player playerL, playerR; uint8_t ui_timerFlag;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void initPong() {
 
 }
 
 
-/*	Funktion: 		Timer Interrupt Service Routine
- * 	Beschreibung: 	Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
- * 					diese Funktion aufgerufen, die die neue Position von dem Spielball berechnet.
- *
- */
+
+/**************************************************************************
+* NAME:			Timer Interrupt Service Routine
+* Description:		Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
+* 			diese Funktion aufgerufen, die die neue Position von dem Spielball berechnet.
+*
+* Subroutines Called:	kein
+*
+* Returns:		keine
+*
+* Globals:		int8_t ui_timerFlag;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 ISR(TIMER0_COMP_vect) {
 	ui_timerFlag = 1;
 }
 
-/*
- * Funktion:		Goal
- * Beschreibung:	Diese Funktion incrementiert den Spielstand (Variable goal im struct)
- * 					des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
- * 					Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
- * 					des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
- */
+
+ /**************************************************************************
+* NAME:			Goal
+* Description:		Diese Funktion incrementiert den Spielstand (Variable goal im struct)
+* 			des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
+* 			Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
+* 			des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
+*
+* Subroutines Called:	???
+*
+* Returns:		keine
+*
+* Globals:		???
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void Goal(struct Player player){
 	// Punkt z�hlen f�r Spieler player
 
@@ -70,12 +127,28 @@ void Goal(struct Player player){
 
 };
 
-/* Funktion:		calcBallPosition
- * Beschreibung:	Berechnet die Position des Balls neu. Hierbei werden die derzeitige Bewegungsrichtung
- * 					des Balls, Wände und Schläger der Spieler berücksichtigt. Falls der Ball eine der
- * 					Seitenwände erreicht, wird die Funktion Goal() aufgerufen, da ein Tor gefallen ist.
- *
- */
+
+/**************************************************************************
+* NAME:			calcBallPosition
+* Description:		Berechnet die Position des Balls neu. Hierbei werden die derzeitige Bewegungsrichtung
+* 			des Balls, Wände und Schläger der Spieler berücksichtigt. Falls der Ball eine der
+* 			Seitenwände erreicht, wird die Funktion Goal() aufgerufen, da ein Tor gefallen ist.
+*
+* Subroutines Called:	keine
+*
+* Returns:		keine
+*
+* Globals:		Ball ball; Player playerL, playerR;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void calcBallPosition() {
 	// Derzeitige Bewegungsrichtung
 	uint8_t movX, movY;				// kein unsigned, da +/-
@@ -128,11 +201,26 @@ void calcBallPosition() {
 
 
 
-/*
- * Funktion:			processInput
- * Beschreibung: 		Verarbeitet die Eingabe der Taster der Spieler und bewegt die Schläger nach oben bzw. unten
- * Globale Variablen:	playerL, playerR
- */
+
+/**************************************************************************
+* NAME:			processInput
+* Description:		Verarbeitet die Eingabe der Taster der Spieler und bewegt die Schläger nach oben bzw. unten
+*
+* Subroutines Called:	keine
+*
+* Returns:		keine
+*
+* Globals:		Player playerL, playerR;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void processInput(uint8_t ui_buttons){
     // Bewegung des linken Schl�gers
     if(ui_player1_L(ui_buttons) == 1){                         // Bewegung nach oben
@@ -155,12 +243,26 @@ void processInput(uint8_t ui_buttons){
     }
 }
 
-// Beschreibung:            Diese Funktion gibt die Bewebung des Balles und der beiden Schl�ger auf der LED Matrix aus
-// Ben�tigte Variablen:     ball, playerL, playerR
-/* Funktion: 				printPong
- * Beschreibung:            Diese Funktion gibt die Bewebung des Balles und der beiden Schl�ger auf der LED Matrix aus
- * Globale Variablen:		ball, playerL, playerR
- */
+
+/**************************************************************************
+* NAME:			printPong
+* Description:		Diese Funktion gibt die Bewebung des Balles und der beiden Schlaeger auf der LED Matrix aus
+*
+* Subroutines Called:	printBit()
+*
+* Returns:		keine
+*
+* Globals:		Ball ball; Player playerL, playerR;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void printPong(){
     // Ausgabe des Balls
     if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
@@ -194,10 +296,30 @@ void printPong(){
     }
 }
 
-/*
- * Funktion:		playPong
- * Beschreibung:	Hauptfunktion
- */
+
+ /**************************************************************************
+* NAME:			playPong
+* Description:		Hauptroutine
+*
+* Subroutines Called:	calcBallPosition();
+*			movecurer();
+*			printPong();
+*			eingabe();
+*			initPong();
+* 
+* Returns:		keine
+*
+* Globals:		int8_t ui_timerFlag;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void playPong() {
 	short play = 1;
 	uint8_t ui_buttons;

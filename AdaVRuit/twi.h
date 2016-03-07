@@ -13,6 +13,9 @@
 
 #define F_CPU 16000000UL
 
+/*  TWI_Adresse der LED-Matrix*/
+#define LED_ADRESS_TWI              ???
+
 /* TWI/I2C clock in Hz */
 #define SCL_CLOCK  100000L
 

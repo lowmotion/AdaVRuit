@@ -1,19 +1,44 @@
-/*
- * twi.c
- *
- *  Created on: Mar 2, 2016
- *      Author: marco
- */
-
+/*****************************************************************************
+*
+* FILE: 		twi.c
+* PROJECT:		Spielekonsole
+* MODULE:		???
+*
+* Description:		Diese Datei enthällt sllr Funktionen zur Verwendung es TWI
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date: 02.03.2016
+* BY:	Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
 #include "twi.h"
 
-/*
- * Funktion: 		twi_init
- * Beschreibung:	Initialisiert die TWI Schnittstelle, welche zu I2C kompatibel ist.
- * 					Dazu wird die Clock (SCL) eingerichtet. Der Prescaler (TWPS) wird immer auf "0 0" gesetzt.
- * 					Der Faktor TWBR wird anhand der Formel aus dem Datenblatt über die Precompiler Definitionen
- * 					ausgerechnet.
- */
+/**************************************************************************
+* NAME:			twi_init
+* Description:		DInitialisiert die TWI Schnittstelle, welche zu I2C kompatibel ist.
+* 			Dazu wird die Clock (SCL) eingerichtet. Der Prescaler (TWPS) wird immer auf "0 0" gesetzt.
+* 			Der Faktor TWBR wird anhand der Formel aus dem Datenblatt über die Precompiler Definitionen
+* 			ausgerechnet.
+*
+* Subroutines Called:	keine
+*
+* Returns:		keine
+*
+* Globals:		keine
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void twi_init(void)
 {
 	/* Prescaler = 1 */
@@ -23,14 +48,29 @@ void twi_init(void)
 
 }
 
-/*
- * Funktion:		twi_start
- * Beschreibung:	Sendet das Startbit und danach die mitgegebene Adresse auf den TWI/I2C-Bus.
- * 					Prüft ob das Gerät erreichbar ist.
- * Return:			uint8_t:
- * 						0 = Gerät erreicht
- * 						1 = Gerät nicht erreicht
- */
+
+/**************************************************************************
+* NAME:			twi_start
+* Description:		Sendet das Startbit und danach die mitgegebene Adresse auf den TWI/I2C-Bus.
+* 			Prüft ob das Gerät erreichbar ist.
+*
+* Subroutines Called:	keine
+*
+* Returns:		uint8_t:
+ * 				0 = Gerät erreicht
+ * 				1 = Gerät nicht erreicht
+*
+* Globals:		keine
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 uint8_t twi_start(uint8_t address)
 {
 	uint8_t   twst;
@@ -61,10 +101,26 @@ uint8_t twi_start(uint8_t address)
 	return 0;
 }
 
-/*
- * Funktion:		twi_stop
- * Beschreibung:	Schließt die Aktulle Übertragung ab und gibt den TWI/I2C-Bus wieder frei.
- */
+
+ /**************************************************************************
+* NAME:			twi_stop
+* Description:		Schließt die Aktulle Übertragung ab und gibt den TWI/I2C-Bus wieder frei.
+*
+* Subroutines Called:	keine
+*
+* Returns:		keine
+* 
+* Globals:		keine
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 void twi_stop(void)
 {
 	/* Sende Stop Bit */
@@ -76,14 +132,29 @@ void twi_stop(void)
 	/* Bus wieder freigegeben */
 }
 
-/*
- * Funktion:		twi_write
- * Beschreibung:	Sendet ein Byte über den TWI/I2C-Bus und prüft, ob das Byte angekommen ist.
- * 					Die Funktion twi_start muss vorher aufgerufen werden.
- * Return:			Uint8_t:
- * 						0 = Byte erfolgreich übertragen
- * 						1 = Kein vom Empfänger ACK erhalten
- */
+
+  /**************************************************************************
+* NAME:			twi_write
+* Description:		Sendet ein Byte über den TWI/I2C-Bus und prüft, ob das Byte angekommen ist.
+* 			Die Funktion twi_start muss vorher aufgerufen werden.
+*
+* Subroutines Called:	keine
+*
+* Returns:		Uint8_t:
+ * 				0 = Byte erfolgreich übertragen
+ * 				1 = Kein vom Empfänger ACK erhalten
+* 
+* Globals:		keine
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
 uint8_t twi_write(uint8_t data)
 {
 	uint8_t   twst;

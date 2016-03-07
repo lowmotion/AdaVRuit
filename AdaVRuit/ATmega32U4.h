@@ -1,9 +1,20 @@
-/*
- * ATmega32U4.h
- *
- *  Created on: Feb 11, 2016
- *      Author: marco
- */
+ /*****************************************************************************
+*
+* FILE: 		      ATmega32U4.h
+* PROJECT:	      Spielekonsole
+* MODULE:		      ???
+*
+* Description:		Header zu ATmega32U4.c
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date:   11.02.2016
+* BY:	    Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
 
 #ifndef ATMEGA32U4_H_
 #define ATMEGA32U4_H_

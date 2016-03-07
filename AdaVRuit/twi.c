@@ -173,3 +173,63 @@ uint8_t twi_write(uint8_t data)
 	return 0;
 
 }
+
+/**************************************************************************
+* NAME:			TWI_sendByte
+* Description:		schlatet die gewünschte LED an oder aus
+*
+* Subroutines Called:	twi_start();
+* 			twi_write();
+*			twi_stop()
+*
+* Returns:		keine
+*
+* Globals:		keine
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
+TWI_sendByte(uint8_t offset, uint8_t byte){
+	twi_start(LED_ADRESS_TWI);
+	twi_write(offset);
+	twi_write(byte);
+	twi_stop();
+}
+
+/**************************************************************************
+* NAME:			TWI_sendArray
+* Description:		Überträgt die gesamte Matrix auf die Anzeige
+*
+* Subroutines Called:	twi_start();
+* 			twi_write();
+*			twi_stop()
+*
+* Returns:		keine
+*
+* Globals:		uint8_t matrix[8][2]
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
+TWI_sendArray(int8_t ui_matrix[8][2]){
+	twi_start(LED_ADRESS_TWI);
+	twi_write(0x00);		// Senden des Offsets
+	for(uint8_t row = 0; row < 8; row++){
+		for(uint8_t leftRight = 0; leftRight < 2; leftRight++){
+			twi_write(ui_matrix[row][leftRight]);
+		}
+	}
+	twi_stop();
+}

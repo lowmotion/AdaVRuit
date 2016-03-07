@@ -157,7 +157,7 @@ TWI_sendArray(int8_t ui_matrix[8][2]){
 	twi_write(0x00);		// Senden des Offsets
 	for(uint8_t row = 0; row < 8; row++){
 		for(uint8_t leftRight = 0; leftRight < 2; leftRight++){
-			twi_write(matrix[row][leftRight]);
+			twi_write(ui_matrix[row][leftRight]);
 		}
 	}
 	twi_stop();

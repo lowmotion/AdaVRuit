@@ -24,22 +24,27 @@ uint8_t matrix[8][2];
  * Globale Variablen:	matrix[8][2]
  */
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
+	uint8_t leftRight = 0x00;
 	switch(ui_ledState) {
-	case LED_ON:
-		if(ui_column > 7) {
-				matrix[ui_row][1] &= ~(1 << (ui_column-8));
-			} else {
-				matrix[ui_row][0] &= ~(1 << ui_column);
-			}
-		TWI_sendByte((ui_row*2)+1, matrix[ui_row][1]);
-		break;
 	case LED_OFF:
 		if(ui_column > 7) {
+				matrix[ui_row][1] &= ~(1 << (ui_column-8));
+				leftRight = 1;
+			} else {
+				matrix[ui_row][0] &= ~(1 << ui_column);
+				leftRight = 0;
+			}
+		TWI_sendByte(ui_row*2)+leftRight, matrix[ui_row][leftRight]);
+		break;
+	case LED_ON:
+		if(ui_column > 7) {
 				matrix[ui_row][1] |= (1 << (ui_column-8));
+				leftRight = 1;
 			} else {
 				matrix[ui_row][0] |= (1 << ui_column);
+				leftRight = 0;
 			}
-		TWI_sendByte((ui_row*2), matrix[ui_row][1]);
+		TWI_sendByte((ui_row*2)+leftRight, matrix[ui_row][leftRight]);
 		break;
 	}
 

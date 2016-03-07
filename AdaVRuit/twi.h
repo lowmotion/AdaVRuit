@@ -1,9 +1,20 @@
-/*
- * twi.h
- *
- *  Created on: Mar 2, 2016
- *      Author: marco
- */
+ /*****************************************************************************
+*
+* FILE: 		      twi.h
+* PROJECT:	      Spielekonsole
+* MODULE:		      ???
+*
+* Description:		Header zu twi.c
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date:   02.03.2016
+* BY:	    Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
 
 #ifndef TWI_H_
 #define TWI_H_

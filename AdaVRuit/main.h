@@ -1,9 +1,20 @@
-/*
- * main.h
- *
- *  Created on: Feb 11, 2016
- *      Author: marco
- */
+ /*****************************************************************************
+*
+* FILE: 		      main.h
+* PROJECT:	      Spielekonsole
+* MODULE:		      ???
+*
+* Description:		Header zu main.c
+*
+* Notes:		-
+*
+* Compiler dependencies or special instructions:
+*
+* REVISION HISTORY
+* Date:   11.02.2016
+* BY:	    Michel, Marco, Michael, Christian, Tobias
+*
+*****************************************************************************/
 
 #ifndef MAIN_H_
 #define MAIN_H_

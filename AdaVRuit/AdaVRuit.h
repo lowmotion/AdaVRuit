@@ -16,13 +16,14 @@
 *
 *****************************************************************************/
 
-#ifndef ATMEGA32U4_H_
-#define ATMEGA32U4_H_
+#ifndef ADAVRUIT_H_
+#define ADAVRUIT_H_
 
 #include "main.h"
+#include "twi.h"
 
-#define TRUE	0x01
-#define FALSE	0x00
+#define TRUE	1
+#define FALSE	0
 
 #define BIT0	0b00000001
 #define BIT1	0b00000010
@@ -33,11 +34,23 @@
 #define BIT6	0b01000000
 #define BIT7	0b10000000
 
-void initATMega32();
+#define LED_ON	1
+#define LED_OFF	0
 
-void TWI_sendByte(uint8_t ui_adress, uint8_t ui_data);
+/* Helligkeit der LEDs des Displays. Zwischen 0 und 15 */
+#ifndef LED_BRIGHTNESS
+#warning "LED_BRIGHTNESS was not set for AdaVRuit.h. Default is '7'. Possible between '0' and '15'!"
+#endif
 
-void TWI_sendArray(uint8_t ui_data[8][2]);
+void clearDisplay();
+
+void initSystem();
+
+void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState);
+
+void printArray(uint8_t ui_matrix[8][2]);
+
+uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 
 uint8_t ui_player1_L();
 uint8_t ui_player1_R();
@@ -67,4 +80,4 @@ void resetPlayer2_R(uint8_t *_ui_buttons);
 void resetPlayer2_U(uint8_t *_ui_buttons);
 void resetPlayer2_D(uint8_t *_ui_buttons);
 
-#endif /* ATMEGA32U4_H_ */
+#endif /* ADAVRUIT_H_ */

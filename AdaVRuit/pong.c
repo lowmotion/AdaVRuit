@@ -326,10 +326,10 @@ void playPong() {
 	initPong();
 
 	while(play) {
-        ui_buttons = eingabe();
+        //ui_buttons = eingabe();
 		if(ui_timerFlag == 1){
 			calcBallPosition();
-			movecurer(ui_buttons);
+			//movecurer(ui_buttons);
 			ui_buttons = 0;
 			printPong();
 			ui_timerFlag = 0;

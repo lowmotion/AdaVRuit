@@ -22,13 +22,17 @@
 #include <inttypes.h>
 #include <util/twi.h>
 
+/* Taktfrequenz der CPU */
+#ifndef F_CPU
+#warning "Warning F_CPU not defined for twi.h"
 #define F_CPU 16000000UL
-
-/*  TWI_Adresse der LED-Matrix*/
-#define LED_ADRESS_TWI              ???
+#endif
 
 /* TWI/I2C clock in Hz */
+#ifndef SCL_CLOCK
+#warning "Warning SCL_CLOCK not defined for twi.h. Default is 100 kHz"
 #define SCL_CLOCK  100000L
+#endif
 
 void twi_init();
 
@@ -37,10 +41,5 @@ uint8_t twi_start(uint8_t address);
 void twi_stop(void);
 
 uint8_t twi_write(uint8_t data);
-
-void twi_sendByte(uint8_t offset, uint8_t byte);
-
-void twi_sendArray(int8_t ui_matrix[8][2]);
-
 
 #endif /* TWI_H_ */

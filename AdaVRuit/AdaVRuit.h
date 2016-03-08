@@ -22,6 +22,8 @@
 #include "main.h"
 #include "twi.h"
 
+#define DISABLE_WATCHDOG()  MCUSR &= ~(1<<WDRF); WDTCSR = 0x00
+
 #define TRUE	1
 #define FALSE	0
 

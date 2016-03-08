@@ -21,6 +21,8 @@
 
 #include "main.h"
 
+#include <avr/interrupt.h>
+
 /* Konstanten */
 #define ROWS 		8	// Anzahl der Zeilen des Spielfelds in Pixeln
 #define COLUMNS 	16	// Anzahl der Spalten ders Spielfelds in Pixeln

@@ -175,6 +175,7 @@ void initSystem() {
 	initATmega();
 	initTWI();
 	initDisplay(LED_BRIGHTNESS);
+	DISABLE_WATCHDOG();
 }
 
 /**************************************************************************
@@ -214,7 +215,6 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 		twi_write((ui_row*2)+leftRight);
 		twi_write(matrix[ui_row][leftRight]);
 		twi_stop();
-		//TWI_sendByte((ui_row*2)+leftRight, matrix[ui_row][leftRight]);
 		break;
 	case LED_ON:
 		if(ui_column > 7) {
@@ -228,7 +228,6 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 		twi_write((ui_row*2)+leftRight);
 		twi_write(matrix[ui_row][leftRight]);
 		twi_stop();
-		//TWI_sendByte((ui_row*2)+leftRight, matrix[ui_row][leftRight]);
 		break;
 	}
 

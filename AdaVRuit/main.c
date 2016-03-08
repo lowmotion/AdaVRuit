@@ -40,19 +40,9 @@
 **************************************************************************/
 int main() {
 	initSystem();
+	playPong();
 	while(1) {
-		for(short row = 0; row < 8; row++) {
-			for(short column = 0; column < 16; column++) {
-				printBit(row, column, 1);
-				_delay_ms(100);
-			}
-		}
-		for(short row = 0; row < 8; row++) {
-			for(short column = 0; column < 16; column++) {
-				printBit(row, column, 0);
-				_delay_ms(100);
-			}
-		}
+		;
 	}
 	return 0;
 }

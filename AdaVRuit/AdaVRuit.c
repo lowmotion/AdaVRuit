@@ -201,6 +201,7 @@ void initSystem() {
 *
 **************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
+	cli();
 	uint8_t leftRight = 0x00;
 	switch(ui_ledState) {
 	case LED_OFF:
@@ -230,6 +231,7 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 		twi_stop();
 		break;
 	}
+	sei();
 
 }
 
@@ -357,8 +359,8 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 * Date: By: Description:
 *
 **************************************************************************/
-uint8_t ui_eingabe(){
-    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
+uint8_t ui_eingabe(uint8_t ui_buttons){
+    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00;
     ui_bufferPF = ~PINF;
     ui_bufferPB = ~PINB;
 

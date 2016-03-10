@@ -42,7 +42,7 @@ int main() {
 	initSystem();
 	playPong();
 	while(1) {
-		;
+		printBit(0,2,1);
 	}
 	return 0;
 }

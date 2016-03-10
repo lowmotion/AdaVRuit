@@ -41,7 +41,7 @@ struct Player {
 
 struct Ball ball;
 struct Player playerL, playerR;
-uint8_t ui_timerFlag;
+volatile uint8_t ui_timerFlag;
 uint16_t timerOffset;
 
 void initTimer() {
@@ -91,12 +91,17 @@ void initTimer() {
 ISR(TIMER1_OVF_vect) {
 	/* Disable Interrupts */
 	cli();
-	printBit(0,4,1);
+	if(ui_getBit(0,4)) {
+		printBit(0,4,0);
+	} else {
+		printBit(0,4,1);
+	}
 	ui_timerFlag = 1;
 	if(timerOffset < 60000) {
 		timerOffset += 100;
 	}
 	TCNT1 = timerOffset;
+	printBit(0,3,ui_timerFlag);
 	sei();
 }
 
@@ -132,6 +137,7 @@ void Goal(struct Player player){
 	// verr�ckte Ausgabe machen, dass ein Punkt gefallen ist
 
 	// Spielball neu Initialisieren
+	return;
 
 };
 
@@ -432,14 +438,16 @@ void initPong() {
 **************************************************************************/
 void playPong() {
 	short play = 1;
-	//uint8_t ui_buttons;
+	uint8_t ui_buttons = 0;
 	initPong();
 	//printPong();
+	ui_timerFlag = 1;
 	while(play) {
-        //ui_buttons = eingabe();
-		if(ui_timerFlag == 1){
-			calcBallPosition();
+        //ui_buttons = ui_eingabe(ui_buttons);
+		if(ui_timerFlag){
 			printBit(0,0,1);
+			calcBallPosition();
+			//processInput(ui_buttons);
 
 			//ui_buttons = 0;
 			printPong();

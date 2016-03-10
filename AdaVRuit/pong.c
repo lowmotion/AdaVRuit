@@ -57,11 +57,13 @@ void initTimer() {
 	TIMSK1 |= (1 << TOIE1);
 
 	/* Startwert des Timers setzen */
-	timerOffset = 0;
+	timerOffset = 50000;
 	TCNT1 = timerOffset;
 
 	/* Global Interrupts aktivieren */
-	SREG |= (1 << 7);
+	//SREG |= (1 << 7);
+	SREG|=0x80;
+	sei();
 }
 
 
@@ -87,17 +89,20 @@ void initTimer() {
 *
 **************************************************************************/
 ISR(TIMER1_OVF_vect) {
-	uint8_t sreg = SREG;
 	/* Disable Interrupts */
-	SREG &= ~(1 << 7);
+	cli();
+	printBit(0,4,1);
 	ui_timerFlag = 1;
 	if(timerOffset < 60000) {
 		timerOffset += 100;
 	}
 	TCNT1 = timerOffset;
-	SREG = sreg;
+	sei();
 }
 
+ISR(__vector_default) {
+
+}
 
  /**************************************************************************
 * NAME:			Goal
@@ -389,14 +394,16 @@ void initPong() {
 	playerR.width = BAT_WIDTH;
 
 	printPong();
-	//initTimer();
+	initTimer();
 
+	cli();
 	/* Watchdog deaktivieren */
 	MCUSR &= ~(1<<WDRF);
 	WDTCSR |= (1<<WDCE) | (1<<WDE);
 	WDTCSR = 0x00;
 
-	SREG |= (1<<7);
+	sei();
+	SREG|=0x80;
 }
 
 
@@ -431,10 +438,11 @@ void playPong() {
 	while(play) {
         //ui_buttons = eingabe();
 		if(ui_timerFlag == 1){
-			//calcBallPosition();
+			calcBallPosition();
+			printBit(0,0,1);
 
 			//ui_buttons = 0;
-			//printPong();
+			printPong();
 			ui_timerFlag = 0;
 		}
 	}

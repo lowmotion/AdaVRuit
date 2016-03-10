@@ -55,7 +55,7 @@ void initSystem();
 
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState);
 
-void printArray(uint8_t ui_matrix[8][2]);
+void printArray(uint16_t ui_matrix[8]);
 
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 

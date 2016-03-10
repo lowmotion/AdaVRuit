@@ -28,6 +28,7 @@
 #include <avr/interrupt.h>
 
 #include "AdaVRuit.h"
+#include "menu.h"
 #include "pong.h"
 
 #endif /* MAIN_H_ */

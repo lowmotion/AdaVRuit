@@ -24,7 +24,7 @@
  * 					mit jeweils acht Bit. Jedes einzelne Bit ist also eine LED.
  * 					8 Zeilen x 2 Spalten x 8 Bit = 16 Spalten x 8 Reihen
  */
-uint8_t matrix[8][2] = {};
+uint16_t matrix[8] = {};
 
 
 volatile uint8_t ui_timerFlag = 0;
@@ -103,15 +103,17 @@ void initTWI() {
 *
 **************************************************************************/
 void clearDisplay() {
+	cli();
 	twi_start(SLAVE_ADRESS);
 	twi_write(0x00);	// Startadresse des Displayspeichers
 	for(short row = 0; row < 8; row++) {
 		for(short column = 0; column < 2; column++) {
-			matrix[row][column] = 0;
+			matrix[row] = 0;
 			twi_write(0);
 		}
 	}
 	twi_stop();
+	sei();
 }
 
 
@@ -166,11 +168,6 @@ void initTimer() {
 	/* Global Interrupts aktivieren */
 	SREG|=0x80;
 	sei();
-	/* Clock Prescaler auf clk/1024
-	 * incrementiert 15625 mal pro Sekunde */
-	TCCR1B |= (1 << CS10);
-	TCCR1B &= ~(1 << CS11);
-	TCCR1B |= (1 << CS12);
 
 	/* Overflow Interrupt aktivieren */
 	TIMSK1 |= (1 << TOIE1);
@@ -178,6 +175,12 @@ void initTimer() {
 	/* Startwert des Timers setzen */
 	ui_timerOffset = UINT16_MAX-15625; // 1 Sekunde
 	TCNT1 = ui_timerOffset;
+
+	/* Clock Prescaler auf clk/1024
+	 * incrementiert 15625 mal pro Sekunde */
+	TCCR1B |= (1 << CS10);
+	TCCR1B &= ~(1 << CS11);
+	TCCR1B |= (1 << CS12);
 }
 
 /**************************************************************************
@@ -263,6 +266,27 @@ void initSystem() {
 **************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 	cli();
+	switch(ui_ledState) {
+	case LED_OFF:
+		matrix[ui_row] &= ~(1 << (15 - ui_column));
+		twi_start(SLAVE_ADRESS);
+		twi_write((ui_row*2));
+		twi_write((uint8_t)(matrix[ui_row] >> 8));
+		twi_write((uint8_t)matrix[ui_row]);
+		twi_stop();
+		break;
+	case LED_ON:
+		//matrix[ui_row] |= (1 << (15 - ui_column));
+		matrix[ui_row] |= 0x0080;
+		uint8_t tmp = 0x80;
+		twi_start(SLAVE_ADRESS);
+		twi_write((ui_row*2));
+		twi_write(matrix[ui_row] >> 8);
+		twi_write(tmp);
+		twi_stop();
+		break;
+	}
+/*	cli();
 	uint8_t leftRight = 0x00;
 	switch(ui_ledState) {
 	case LED_OFF:
@@ -293,7 +317,7 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 		break;
 	}
 	sei();
-
+*/
 }
 
 
@@ -316,17 +340,28 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 * Date: By: Description:
 *
 **************************************************************************/
-void printArray(uint8_t ui_matrix[8][2]) {
+void printArray(uint16_t ui_matrix[8]) {
+	cli();
+	uint16_t bitSwappedByte[8];
+	for(short row =0; row < 8; row++) {
+		matrix[row] = ui_matrix[row];
+		uint16_t inputByte = ui_matrix[row];
+		bitSwappedByte[row] = 0;
+		for (short i = 0; i < 16; i++ ) {
+		  bitSwappedByte[row] >>= 1;
+		  bitSwappedByte[row] |= ( inputByte & 0x8000 );
+		  inputByte <<= 1;
+		}
+	}
+
 	twi_start(SLAVE_ADRESS);
 	twi_write(0x00);	// Startadresse des Displayspeichers
 	for(short row = 0; row < 8; row++) {
-		for(short column = 0; column < 2; column++) {
-			matrix[row][column] = ui_matrix[row][column];
-			twi_write(ui_matrix[row][column]);
-		}
+		twi_write(bitSwappedByte[row]);
+		twi_write(bitSwappedByte[row] >> 8);
 	}
 	twi_stop();
-	//TWI_sendArray(matrix);
+	sei();
 }
 
 
@@ -350,11 +385,7 @@ void printArray(uint8_t ui_matrix[8][2]) {
 *
 **************************************************************************/
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column) {
-	if(ui_column > 7) {	//
-		return matrix[ui_row][1] & (1 << (ui_column-8));
-	} else {
-		return matrix[ui_row][0] & (1 << ui_column);
-	}
+	return (uint8_t)((matrix[ui_row] >> (15 - ui_column) ) & 1);
 }
 
 // Diese Funktionen geben die Zahl = 1, wenn der Taster gedr�ckt ist - =0 wenn der Taster nicht gedr�ckt ist

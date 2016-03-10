@@ -40,9 +40,12 @@
 **************************************************************************/
 int main() {
 	initSystem();
-	playPong();
+	uint16_t feld[8] = { 0x8421, 0x8421, 0x8421, 0x8421, 0x8421, 0x8421, 0x8421, 0x8421 };
+	printArray(feld);
+	//clearDisplay();
+	//printBit(0, 0, 1);
 	while(1) {
-		printBit(0,2,1);
+		;
 	}
 	return 0;
 }

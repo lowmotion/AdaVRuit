@@ -280,35 +280,6 @@ void processInput(uint8_t ui_buttons){
 *
 **************************************************************************/
 void printPong(){
-//	if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
-//	        printBit(ball.posY, ball.posX, LED_ON);
-//	        printBit(ball.prevY, ball.prevX, LED_OFF);
-//	    }
-//
-//	    // Ausgabe der Schl�ger
-//	    // Schl�ger Links
-//	    if (playerL.posY != playerL.prevY){
-//	        if(playerL.posY > playerL.prevY){           // Bewegung nach unten
-//	            printBit(playerL.posY+1, 0, LED_ON);
-//	            printBit(playerL.prevY-1, 0, LED_OFF);
-//	        }
-//	        else{                                       // Bewegung nach oben
-//	            printBit(playerL.posY-1, 0, LED_ON);
-//	            printBit(playerL.prevY+1, 0, LED_OFF);
-//	        }
-//	    }
-//
-//	    // Schl�ger Rechts
-//	    if (playerR.posY != playerR.prevY){
-//	        if(playerR.posY > playerR.prevY){           // Bewegung  nach unten
-//	            printBit(playerR.posY+1, 15, LED_ON);
-//	            printBit(playerR.prevY-1, 15, LED_OFF);
-//	        }
-//	        else {                                        // Bewegung nach oben
-//	            printBit(playerR.posY-1, 15, LED_ON);
-//	            printBit(playerR.prevY+1, 15,  LED_OFF);
-//	        }
-//	    }
     // Ausgabe des Balls
     if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
         printBit(ball.posY, ball.posX, LED_ON);
@@ -422,12 +393,6 @@ void initPong() {
 	playerR.prevY = 3;
 	playerR.width = BAT_WIDTH;
 
-	/*printBit(playerL.posY, playerL.posX, 1);
-	printBit(playerL.posY+1, playerL.posX, 1);
-	printBit(playerL.posY-1, playerL.posX, 1);
-	printBit(playerR.posY, playerR.posX, 1);
-	printBit(playerR.posY+1, playerR.posX, 1);
-	printBit(playerR.posY-1, playerR.posX, 1);*/
 
 	printPong();
 	initTimer();

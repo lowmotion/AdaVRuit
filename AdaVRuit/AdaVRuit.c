@@ -26,6 +26,10 @@
  */
 uint8_t matrix[8][2] = {};
 
+
+volatile uint8_t ui_timerFlag = 0;
+volatile uint16_t ui_timerOffset = 0;
+
 /**************************************************************************
 * NAME:			initATMega32
 * Description:		Initialisierung der Ein- und Ausgänge
@@ -49,6 +53,8 @@ void initATmega() {
 	/* Taster */
     DDRB = 0b00000000;       // Eingänge PortB 1 3 2 6
     DDRF = 0b00000000;       // Eingänge PortF 4 5 6 7
+
+    /* Pullup aktivieren */
     PORTB = 0xFF;
     PORTF = 0xFF;
 }
@@ -154,6 +160,58 @@ void initDisplay(uint8_t brightness) {
 	twi_stop();
 }
 
+void initTimer() {
+	/* Timer/Counter1 Overflow*/
+
+	/* Global Interrupts aktivieren */
+	SREG|=0x80;
+	sei();
+	/* Clock Prescaler auf clk/1024
+	 * incrementiert 15625 mal pro Sekunde */
+	TCCR1B |= (1 << CS10);
+	TCCR1B &= ~(1 << CS11);
+	TCCR1B |= (1 << CS12);
+
+	/* Overflow Interrupt aktivieren */
+	TIMSK1 |= (1 << TOIE1);
+
+	/* Startwert des Timers setzen */
+	ui_timerOffset = UINT16_MAX-15625; // 1 Sekunde
+	TCNT1 = ui_timerOffset;
+}
+
+/**************************************************************************
+* NAME:			Timer Interrupt Service Routine
+* Description:		Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
+* 			diese Funktion aufgerufen, die die neue Position von dem Spielball berechnet.
+*
+* Subroutines Called:	kein
+*
+* Returns:		keine
+*
+* Globals:		int8_t ui_timerFlag;
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+*
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
+ISR(TIMER1_OVF_vect) {
+	/* Disable Interrupts */
+	cli();
+	ui_timerFlag = 1;
+	TCNT1 = ui_timerOffset;
+	sei();
+}
+
+ISR(__vector_default) {
+
+}
+
 /**************************************************************************
 * NAME:					initSystem
 * Description:			Initialisierung das gesamte System.
@@ -178,6 +236,7 @@ void initSystem() {
 	initTWI();
 	initDisplay(LED_BRIGHTNESS);
 	DISABLE_WATCHDOG();
+	initTimer();
 }
 
 /**************************************************************************

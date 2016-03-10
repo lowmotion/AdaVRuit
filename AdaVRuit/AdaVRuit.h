@@ -22,7 +22,7 @@
 #include "main.h"
 #include "twi.h"
 
-#define DISABLE_WATCHDOG()  MCUSR &= ~(1<<WDRF); WDTCSR = 0x00
+#define DISABLE_WATCHDOG()  MCUSR &= ~(1<<WDRF); WDTCSR |= (1<<WDCE) | (1<<WDE); WDTCSR = 0x00
 
 #define TRUE	1
 #define FALSE	0
@@ -43,6 +43,11 @@
 #ifndef LED_BRIGHTNESS
 #warning "LED_BRIGHTNESS was not set for AdaVRuit.h. Default is '7'. Possible between '0' and '15'!"
 #endif
+
+extern volatile uint8_t ui_timerFlag;
+
+extern volatile uint16_t ui_timerOffset;
+
 
 void clearDisplay();
 

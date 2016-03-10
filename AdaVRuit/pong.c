@@ -41,67 +41,7 @@ struct Player {
 
 struct Ball ball;
 struct Player playerL, playerR;
-volatile uint8_t ui_timerFlag;
-uint16_t timerOffset;
 
-void initTimer() {
-	/* Timer/Counter1 Overflow*/
-
-	/* Clock Prescaler auf clk/1024
-	 * incrementiert 15625 mal pro Sekunde */
-	TCCR1B |= (1 << CS10);
-	TCCR1B &= ~(1 << CS11);
-	TCCR1B |= (1 << CS12);
-
-	/* Overflow Interrupt aktivieren */
-	TIMSK1 |= (1 << TOIE1);
-
-	/* Startwert des Timers setzen */
-	timerOffset = 50000;
-	TCNT1 = timerOffset;
-
-	/* Global Interrupts aktivieren */
-	//SREG |= (1 << 7);
-	SREG|=0x80;
-	sei();
-}
-
-
-
-/**************************************************************************
-* NAME:			Timer Interrupt Service Routine
-* Description:		Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
-* 			diese Funktion aufgerufen, die die neue Position von dem Spielball berechnet.
-*
-* Subroutines Called:	kein
-*
-* Returns:		keine
-*
-* Globals:		int8_t ui_timerFlag;
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
-**************************************************************************/
-ISR(TIMER1_OVF_vect) {
-	/* Disable Interrupts */
-	cli();
-	ui_timerFlag = 1;
-	if(timerOffset < 60000) {
-		timerOffset += 100;
-	}
-	TCNT1 = timerOffset;
-	sei();
-}
-
-ISR(__vector_default) {
-
-}
 
  /**************************************************************************
 * NAME:			Goal
@@ -393,18 +333,10 @@ void initPong() {
 	playerR.prevY = 3;
 	playerR.width = BAT_WIDTH;
 
+	ui_timerOffset = TIMER_START;
 
 	printPong();
-	initTimer();
 
-
-	cli();
-	/* Watchdog deaktivieren */
-	MCUSR &= ~(1<<WDRF);
-	WDTCSR |= (1<<WDCE) | (1<<WDE);
-	WDTCSR = 0x00;
-
-	sei();
 	SREG|=0x80;
 }
 
@@ -439,9 +371,12 @@ void playPong() {
 
 	//printPong();
 	sei();
-	while(1) {
+	while(play) {
         ui_buttons |= ui_eingabe();
 		if(ui_timerFlag){
+			if(ui_timerOffset < TIMER_MAX) {
+				ui_timerOffset += TIMER_STEPSIZE;
+			}
 			calcBallPosition();
 			processInput(ui_buttons);
 			ui_buttons = 0;

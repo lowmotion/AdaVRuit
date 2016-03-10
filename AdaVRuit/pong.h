@@ -33,6 +33,10 @@
 #define FIRST_COLUMN	0			// Index der ersten Spalte
 #define LAST_COLUMN		COLUMNS - 1	// Index der letzten Spalte
 
+#define TIMER_START		53000
+#define TIMER_MAX		63000
+#define TIMER_STEPSIZE	100
+
 /* Funktionen */
 void playPong();
 

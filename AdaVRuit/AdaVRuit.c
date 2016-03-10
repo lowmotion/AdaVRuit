@@ -47,8 +47,10 @@ uint8_t matrix[8][2] = {};
 **************************************************************************/
 void initATmega() {
 	/* Taster */
-    DDRB = 0b10110001;       // Eingänge PortB 1 3 2 6
-    DDRF = 0b00001111;       // Eingänge PortF 4 5 6 7
+    DDRB = 0b00000000;       // Eingänge PortB 1 3 2 6
+    DDRF = 0b00000000;       // Eingänge PortF 4 5 6 7
+    PORTB = 0xFF;
+    PORTF = 0xFF;
 }
 
 
@@ -359,8 +361,8 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 * Date: By: Description:
 *
 **************************************************************************/
-uint8_t ui_eingabe(uint8_t ui_buttons){
-    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00;
+uint8_t ui_eingabe(){
+    uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
     ui_bufferPF = ~PINF;
     ui_bufferPB = ~PINB;
 

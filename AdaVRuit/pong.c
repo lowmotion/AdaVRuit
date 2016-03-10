@@ -91,17 +91,11 @@ void initTimer() {
 ISR(TIMER1_OVF_vect) {
 	/* Disable Interrupts */
 	cli();
-	if(ui_getBit(0,4)) {
-		printBit(0,4,0);
-	} else {
-		printBit(0,4,1);
-	}
 	ui_timerFlag = 1;
 	if(timerOffset < 60000) {
 		timerOffset += 100;
 	}
 	TCNT1 = timerOffset;
-	printBit(0,3,ui_timerFlag);
 	sei();
 }
 
@@ -237,27 +231,27 @@ void calcBallPosition() {
 **************************************************************************/
 void processInput(uint8_t ui_buttons){
     // Bewegung des linken Schl�gers
-    if(ui_player1_L(ui_buttons) == 1){                         // Bewegung nach oben
+    if(b_player1_U(ui_buttons) == 1){                         // Bewegung nach oben
         playerL.prevY = playerL.posY;
         if(playerL.posY > 0) {
 			playerL.posY -= 1;
 		}
     }
-    if(ui_player1_D(ui_buttons) == 1){                         // Bewegung nach unten
+    if(b_player1_D(ui_buttons) == 1){                         // Bewegung nach unten
         playerL.prevY = playerL.posY;
-        if(playerL.posY > 0) {
-			playerL.posY -= 1;
+        if(playerL.posY < (ROWS-1)) {
+			playerL.posY += 1;
 		}
     }
 
     // Bewegung des rechten Schl�gers
-    if(ui_player2_U(ui_buttons) == 1){                         // Bewegung nach oben
+    if(b_player2_U(ui_buttons) == 1){                         // Bewegung nach oben
         playerR.prevY = playerR.posY;
         if(playerR.posY > 0) {
         	playerR.posY -= 1;
         }
     }
-    if(ui_player2_D(ui_buttons) == 1){                         // Bewegung nach unten
+    if(b_player2_D(ui_buttons) == 1){                         // Bewegung nach unten
         playerR.prevY = playerR.posY;
         if(playerR.posY < (ROWS-1)) {
         	playerR.posY += 1;
@@ -286,6 +280,35 @@ void processInput(uint8_t ui_buttons){
 *
 **************************************************************************/
 void printPong(){
+//	if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
+//	        printBit(ball.posY, ball.posX, LED_ON);
+//	        printBit(ball.prevY, ball.prevX, LED_OFF);
+//	    }
+//
+//	    // Ausgabe der Schl�ger
+//	    // Schl�ger Links
+//	    if (playerL.posY != playerL.prevY){
+//	        if(playerL.posY > playerL.prevY){           // Bewegung nach unten
+//	            printBit(playerL.posY+1, 0, LED_ON);
+//	            printBit(playerL.prevY-1, 0, LED_OFF);
+//	        }
+//	        else{                                       // Bewegung nach oben
+//	            printBit(playerL.posY-1, 0, LED_ON);
+//	            printBit(playerL.prevY+1, 0, LED_OFF);
+//	        }
+//	    }
+//
+//	    // Schl�ger Rechts
+//	    if (playerR.posY != playerR.prevY){
+//	        if(playerR.posY > playerR.prevY){           // Bewegung  nach unten
+//	            printBit(playerR.posY+1, 15, LED_ON);
+//	            printBit(playerR.prevY-1, 15, LED_OFF);
+//	        }
+//	        else {                                        // Bewegung nach oben
+//	            printBit(playerR.posY-1, 15, LED_ON);
+//	            printBit(playerR.prevY+1, 15,  LED_OFF);
+//	        }
+//	    }
     // Ausgabe des Balls
     if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
         printBit(ball.posY, ball.posX, LED_ON);
@@ -383,7 +406,7 @@ void initPong() {
 	ball.posX = 7;
 	ball.posY = 4;
 	ball.prevX = 8;
-	ball.prevY = 5;
+	ball.prevY = 4;
 
 	/* Player Links */
 	playerL.posX = 0;
@@ -399,8 +422,16 @@ void initPong() {
 	playerR.prevY = 3;
 	playerR.width = BAT_WIDTH;
 
+	/*printBit(playerL.posY, playerL.posX, 1);
+	printBit(playerL.posY+1, playerL.posX, 1);
+	printBit(playerL.posY-1, playerL.posX, 1);
+	printBit(playerR.posY, playerR.posX, 1);
+	printBit(playerR.posY+1, playerR.posX, 1);
+	printBit(playerR.posY-1, playerR.posX, 1);*/
+
 	printPong();
 	initTimer();
+
 
 	cli();
 	/* Watchdog deaktivieren */
@@ -440,16 +471,15 @@ void playPong() {
 	short play = 1;
 	uint8_t ui_buttons = 0;
 	initPong();
-	//printPong();
-	ui_timerFlag = 1;
-	while(play) {
-        //ui_buttons = ui_eingabe(ui_buttons);
-		if(ui_timerFlag){
-			printBit(0,0,1);
-			calcBallPosition();
-			//processInput(ui_buttons);
 
-			//ui_buttons = 0;
+	//printPong();
+	sei();
+	while(1) {
+        ui_buttons |= ui_eingabe();
+		if(ui_timerFlag){
+			calcBallPosition();
+			processInput(ui_buttons);
+			ui_buttons = 0;
 			printPong();
 			ui_timerFlag = 0;
 		}

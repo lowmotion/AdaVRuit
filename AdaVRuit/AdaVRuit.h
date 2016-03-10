@@ -54,7 +54,7 @@ void printArray(uint8_t ui_matrix[8][2]);
 
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 
-uint8_t ui_eingabe(uint8_t ui_buttons);
+uint8_t ui_eingabe();
 
 uint8_t ui_player1_L();
 uint8_t ui_player1_R();

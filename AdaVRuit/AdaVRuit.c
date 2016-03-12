@@ -340,6 +340,36 @@ void printArray(uint16_t ui_matrix[8]) {
 	sei();
 }
 
+/**************************************************************************
+* NAME:			printVerticalArray
+* Description:		Gibt ein ganzes Array vom Format 8 Zeilen x 2 Spalten x 8 Bit auf den LEDs aus.
+*
+* Subroutines Called:	TWI_sendArray();
+*
+* Returns:		keine
+*
+* Globals:		matrix[8][2]
+*
+* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
+* Tested By: Date:
+
+* NOTES:		-
+*
+* REVISION HISTORY
+* Date: By: Description:
+*
+**************************************************************************/
+void printVerticalArray(uint8_t board[16]) {
+	uint16_t newBoard[8] = {0};
+	for (uint8_t k = 0; k < 8; k++)
+	{
+		for (uint8_t i = 0; i < 16; i++)
+		{
+			newBoard[k] |= (((board[i] >> (7-k)) & 1) << (15-i));
+		}
+	}
+	printArray(newBoard);
+}
 
  /**************************************************************************
 * NAME:			ui_getBit

@@ -80,6 +80,8 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState);
 
 void printArray(uint16_t ui_matrix[8]);
 
+void printVerticalArray(uint8_t board[16]);
+
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 
 uint8_t ui_input();

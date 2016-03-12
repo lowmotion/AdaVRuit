@@ -372,7 +372,7 @@ void playPong() {
 	//printPong();
 	sei();
 	while(play) {
-        ui_buttons |= ui_eingabe();
+        ui_buttons |= ui_input();
 		if(ui_timerFlag){
 			if(ui_timerOffset < TIMER_MAX) {
 				ui_timerOffset += TIMER_STEPSIZE;

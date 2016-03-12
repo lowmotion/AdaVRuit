@@ -19,11 +19,27 @@
 #ifndef ADAVRUIT_H_
 #define ADAVRUIT_H_
 
+/***************
+ * INCLUDES
+ ***************/
 #include "main.h"
 #include "twi.h"
 
+/****************
+ * MAKROS
+ ****************/
 #define DISABLE_WATCHDOG()  MCUSR &= ~(1<<WDRF); WDTCSR |= (1<<WDCE) | (1<<WDE); WDTCSR = 0x00
+#define TIMER1_CPU_DIV_8() 		TCCR1B|=2
+#define TIMER1_CPU_DIV_64() 	TCCR1B|=3
+#define TIMER1_CPU_DIV_256() 	TCCR1B|=4
+#define TIMER1_CPU_DIV_1024() 	TCCR1B|=5
+#define TIMER1_OVERFLOW_INT_ENABLE() TIMSK1 |= (1<<TOIE0)
+#define ENABLE_GLOBAL_INT() 	SREG|=0x80
+#define DISABLE_GLOBAL_INT() 	SREG&=~(0x80)
 
+/*******************
+ * DEFINES
+ *******************/
 #define TRUE	1
 #define FALSE	0
 
@@ -44,10 +60,17 @@
 #warning "LED_BRIGHTNESS was not set for AdaVRuit.h. Default is '7'. Possible between '0' and '15'!"
 #endif
 
+/**************************
+ * EXTERNE VARIABLEN
+ **************************/
 extern volatile uint8_t ui_timerFlag;
 
 extern volatile uint16_t ui_timerOffset;
 
+
+/**************************
+ * FUNKTIONEN
+ **************************/
 
 void clearDisplay();
 
@@ -59,7 +82,7 @@ void printArray(uint16_t ui_matrix[8]);
 
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 
-uint8_t ui_eingabe();
+uint8_t ui_input();
 
 uint8_t ui_player1_L();
 uint8_t ui_player1_R();

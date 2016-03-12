@@ -166,21 +166,18 @@ void initTimer() {
 	/* Timer/Counter1 Overflow*/
 
 	/* Global Interrupts aktivieren */
-	SREG|=0x80;
-	sei();
+	ENABLE_GLOBAL_INT();
 
 	/* Overflow Interrupt aktivieren */
-	TIMSK1 |= (1 << TOIE1);
+	TIMER1_OVERFLOW_INT_ENABLE();
 
 	/* Startwert des Timers setzen */
-	ui_timerOffset = UINT16_MAX-15625; // 1 Sekunde
+	ui_timerOffset = UINT16_MAX-(F_CPU/1024); // 1 Sekunde
 	TCNT1 = ui_timerOffset;
 
 	/* Clock Prescaler auf clk/1024
 	 * incrementiert 15625 mal pro Sekunde */
-	TCCR1B |= (1 << CS10);
-	TCCR1B &= ~(1 << CS11);
-	TCCR1B |= (1 << CS12);
+	TIMER1_CPU_DIV_1024();
 }
 
 /**************************************************************************
@@ -253,7 +250,7 @@ void initSystem() {
 *
 * Returns:		keine
 *
-* Globals:		matrix[8][2]
+* Globals:		matrix[8]
 *
 * Programmer(s):	Michel, Marco, Michael, Christian, Tobias
 * Tested By: Date:
@@ -266,58 +263,37 @@ void initSystem() {
 **************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 	cli();
-	switch(ui_ledState) {
-	case LED_OFF:
-		matrix[ui_row] &= ~(1 << (15 - ui_column));
-		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2));
-		twi_write((uint8_t)(matrix[ui_row] >> 8));
-		twi_write((uint8_t)matrix[ui_row]);
-		twi_stop();
-		break;
-	case LED_ON:
-		//matrix[ui_row] |= (1 << (15 - ui_column));
-		matrix[ui_row] |= 0x0080;
-		uint8_t tmp = 0x80;
-		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2));
-		twi_write(matrix[ui_row] >> 8);
-		twi_write(tmp);
-		twi_stop();
-		break;
-	}
-/*	cli();
-	uint8_t leftRight = 0x00;
+	uint8_t highByte = 0;
 	switch(ui_ledState) {
 	case LED_OFF:
 		if(ui_column > 7) {
-			matrix[ui_row][1] &= ~(1 << (ui_column-8));
-			leftRight = 1;
+			matrix[ui_row] &= ~(1 << (ui_column));
+			highByte = TRUE;
 		} else {
-			matrix[ui_row][0] &= ~(1 << ui_column);
-			leftRight = 0;
+			matrix[ui_row] &= ~(1 << ui_column);
+			highByte = FALSE;
 		}
 		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2)+leftRight);
-		twi_write(matrix[ui_row][leftRight]);
+		twi_write((ui_row*2)+highByte);
+		twi_write(matrix[ui_row] >> (highByte * 8));
 		twi_stop();
 		break;
 	case LED_ON:
 		if(ui_column > 7) {
-			matrix[ui_row][1] |= (1 << (ui_column-8));
-			leftRight = 1;
+			matrix[ui_row] |= (1 << (ui_column));
+			highByte = 1;
 		} else {
-			matrix[ui_row][0] |= (1 << ui_column);
-			leftRight = 0;
+			matrix[ui_row] |= (1 << ui_column);
+			highByte = 0;
 		}
 		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2)+leftRight);
-		twi_write(matrix[ui_row][leftRight]);
+		twi_write((ui_row*2)+highByte);
+		twi_write(matrix[ui_row] >> (highByte * 8));
 		twi_stop();
 		break;
 	}
 	sei();
-*/
+
 }
 
 
@@ -411,7 +387,7 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 
 
 /**************************************************************************
-* NAME:			ui_eingabe
+* NAME:			ui_input
 * Description:		Auslesen der  Eingabetasten (PortB und  PortF).
 *                     	Man geht davon aus, dass die Tasten AKTIVE LOW sind.
 *                     	Es wurden Funktionen definiert, um direkt die Richtungen abzufragen
@@ -451,7 +427,7 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 * Date: By: Description:
 *
 **************************************************************************/
-uint8_t ui_eingabe(){
+uint8_t ui_input(){
     uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
     ui_bufferPF = ~PINF;
     ui_bufferPB = ~PINB;

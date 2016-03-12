@@ -65,12 +65,64 @@ struct Player playerL, playerR;
 * Date: By: Description:
 *
 **************************************************************************/
-void Goal(struct Player player){
-	// Punkt z�hlen f�r Spieler player
+void Goal(uint8_t player){
+	clearDisplay();
+	printCharacters('T', 'O', 'R');
+	_delay_ms(1500);
 
-	// verr�ckte Ausgabe machen, dass ein Punkt gefallen ist
+	/* Score für player erhöhen und Spielball zurücksetzen.
+	 * Der Spieler der kein Tor gemacht hat hat nun Aufschlag
+	 */
+	switch(player) {
+		case 0:
+			playerL.score++;
+			if(playerL.score == MAX_SCORE) {
+				printCharacters(playerL.score + 48, ':', playerR.score +48);
+				_delay_ms(1500);
+				printCharacters('W', 'I', 'N');
+				_delay_ms(2000);
+				initPong();
+				return;
+			}
+			/* Ball zurücksetzen */
+			ball.posX = 8;
+			ball.posY = 4;
+			ball.prevX = 7;
+			ball.prevY = 4;
+			/* Spielerpositionen zurücksetzen */
+			playerL.prevX = playerL.posX;
+			playerL.prevY = playerL.posY;
+			playerR.prevX = playerR.posX;
+			playerR.prevY = playerR.posY;
+			break;
+		case 1:
+			playerR.score++;
+			if(playerR.score == MAX_SCORE) {
+				printCharacters(playerL.score + 48, ':', playerR.score +48);
+				_delay_ms(1500);
+				printCharacters('W', 'I', 'N');
+				_delay_ms(2000);
+				initPong();
+				return;
+			}
+			/* Ball zurücksetzen */
+			ball.posX = 7;
+			ball.posY = 4;
+			ball.prevX = 8;
+			ball.prevY = 4;
+			/* Spielerpositionen zurücksetzen */
+			playerL.prevX = playerL.posX;
+			playerL.prevY = playerL.posY;
+			playerR.prevX = playerR.posX;
+			playerR.prevY = playerR.posY;
+	}
 
-	// Spielball neu Initialisieren
+	printCharacters(playerL.score + 48, ':', playerR.score +48);
+	_delay_ms(1500);
+	clearDisplay();
+	/* Timer für die Spielgeschwindigkeit zurücksetzen */
+	ui_timerOffset = TIMER_START;
+	ui_timerFlag = FALSE;
 	return;
 
 };
@@ -114,7 +166,7 @@ void calcBallPosition() {
 		else if(playerL.posY == ball.prevY) {movX = +1; movY = 0;}
 		else if(playerL.posY == ball.prevY + 1) {movX = +1; movY = -1;}
 		else {
-			Goal(playerR);
+			Goal(1);
 			return;		// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
 		}
 	}
@@ -125,7 +177,7 @@ void calcBallPosition() {
 		else if(playerR.posY == ball.prevY) {movX = -1; movY = 0;}
 		else if(playerR.posY == ball.prevY + 1) {movX = -1; movY = -1;}
 		else {
-			Goal(playerL);
+			Goal(0);
 			return;		// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
 		}
 	}
@@ -325,6 +377,7 @@ void initPong() {
 	playerL.prevX = 0;
 	playerL.prevY = 3;
 	playerL.width = BAT_WIDTH;
+	playerL.score = 0;
 
 	/* Player Links */
 	playerR.posX = 15;
@@ -332,9 +385,11 @@ void initPong() {
 	playerR.prevX = 15;
 	playerR.prevY = 3;
 	playerR.width = BAT_WIDTH;
+	playerR.score = 0;
 
 	ui_timerOffset = TIMER_START;
 
+	clearDisplay();
 	printPong();
 
 	SREG|=0x80;

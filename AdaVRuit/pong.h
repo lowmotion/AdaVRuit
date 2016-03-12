@@ -37,6 +37,8 @@
 #define TIMER_MAX		63000
 #define TIMER_STEPSIZE	100
 
+#define MAX_SCORE	9
+
 /* Funktionen */
 void playPong();
 

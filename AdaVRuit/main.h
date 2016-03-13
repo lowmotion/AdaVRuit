@@ -30,5 +30,6 @@
 #include "menu.h"
 #include "pong.h"
 #include "tetris.h"
+#include "snake.h"
 
 #endif /* MAIN_H_ */

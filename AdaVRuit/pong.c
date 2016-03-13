@@ -221,7 +221,12 @@ void calcBallPosition() {
 * Date: By: Description:
 *
 **************************************************************************/
-void processInput(uint8_t ui_buttons){
+uint8_t processInput(uint8_t ui_buttons){
+	/* Abbruchbedingung */
+	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
+		return 0;
+	}
+
     // Bewegung des linken Schl�gers
     if(b_player1_U(ui_buttons) == 1){                         // Bewegung nach oben
         playerL.prevY = playerL.posY;
@@ -249,6 +254,7 @@ void processInput(uint8_t ui_buttons){
         	playerR.posY += 1;
         }
     }
+    return 1;
 }
 
 
@@ -433,7 +439,7 @@ void playPong() {
 				ui_timerOffset += TIMER_STEPSIZE;
 			}
 			calcBallPosition();
-			processInput(ui_buttons);
+			play = processInput(ui_buttons);
 			ui_buttons = 0;
 			printPong();
 			ui_timerFlag = 0;

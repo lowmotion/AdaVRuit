@@ -19,6 +19,7 @@
 #include "main.h"
 #include <util/delay.h>
 
+
  /**************************************************************************
 * NAME:			main
 * Description:		????? Wir haben schon eine main	?????
@@ -40,7 +41,7 @@
 **************************************************************************/
 int main() {
 	initSystem();
-	playPong();
+	menu();
 	while(1) {
 		;
 	}

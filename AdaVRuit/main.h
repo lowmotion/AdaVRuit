@@ -24,11 +24,11 @@
 #define SLAVE_ADRESS 	0xE0
 #define LED_BRIGHTNESS	5
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
 
 #include "AdaVRuit.h"
+#include "AdaVRuit_Font.h"
 #include "menu.h"
 #include "pong.h"
+#include "tetris.h"
 
 #endif /* MAIN_H_ */

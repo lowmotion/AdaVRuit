@@ -23,6 +23,7 @@
  * INCLUDES
  ***************/
 #include "main.h"
+#include <avr/io.h>
 #include "twi.h"
 
 /****************

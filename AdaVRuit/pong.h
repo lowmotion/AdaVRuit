@@ -22,6 +22,7 @@
 #include "main.h"
 
 #include <avr/interrupt.h>
+#include <avr/delay.h>
 
 /* Konstanten */
 #define ROWS 		8	// Anzahl der Zeilen des Spielfelds in Pixeln

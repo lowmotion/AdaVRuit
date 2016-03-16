@@ -201,7 +201,7 @@ void drawSnake()
 	//Snake
 	for(int i=0; i<snake.snakeLength; i++)
 	{
-		if (snake.snakeX == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
+		if (snake.snakeX[i] == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
 		printBit(snake.snakeX[i], snake.snakeY[i], LED_ON);
 	}
 	//printBit(snake.eraseX, snake.eraseY, LED_OFF);

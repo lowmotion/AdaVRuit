@@ -64,6 +64,14 @@ void makeFood(uint8_t playInit)
 	}
 	food.foodX = x;
 	food.foodY = y;
+	for (int i=0, i<4, i++)
+	{
+		//if(food.foodX>=0 && food.foodX<16 && food.foodY>=0 && food.foodY<8)
+		 printBit(food.foodX, food.foodY, food.foodLED);
+		 _delay_ms(100);
+		 printBit(food.foodX, food.foodY, LED_OFF);
+		 _delay_ms(100);
+	}
 }
 
 /*

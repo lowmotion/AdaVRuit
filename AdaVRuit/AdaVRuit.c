@@ -39,15 +39,6 @@ volatile uint16_t ui_timerOffset = 0;
 * Returns:		keine
 *
 * Globals:		keine
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void initATmega() {
 	/* Taster */
@@ -69,15 +60,6 @@ void initATmega() {
 * Returns:		keine
 *
 * Globals:		???
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void initTWI() {
 	twi_init();
@@ -92,15 +74,6 @@ void initTWI() {
 * Returns:		keine
 *
 * Globals:		matrix
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void clearDisplay() {
 	cli();
@@ -127,15 +100,6 @@ void clearDisplay() {
 * Returns:		keine
 *
 * Globals:		???
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void initDisplay(uint8_t brightness) {
 	/* LED Treiber anschalten */
@@ -190,15 +154,6 @@ void initTimer() {
 * Returns:		keine
 *
 * Globals:		int8_t ui_timerFlag;
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 ISR(TIMER1_OVF_vect) {
 	/* Disable Interrupts */
@@ -221,15 +176,6 @@ ISR(__vector_default) {
 * Returns:		keine
 *
 * Globals:		???
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void initSystem() {
 	initATmega();
@@ -251,15 +197,6 @@ void initSystem() {
 * Returns:		keine
 *
 * Globals:		matrix[8]
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 	cli();
@@ -306,15 +243,6 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 * Returns:		keine
 *
 * Globals:		matrix[8][2]
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void printArray(uint16_t ui_matrix[8]) {
 	cli();
@@ -349,15 +277,6 @@ void printArray(uint16_t ui_matrix[8]) {
 * Returns:		keine
 *
 * Globals:		matrix[8][2]
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void printVerticalArray(uint8_t board[16]) {
 	uint16_t newBoard[8] = {0};
@@ -380,15 +299,6 @@ void printVerticalArray(uint8_t board[16]) {
 * Returns:		uint8_t - Bit der stelle [row][column]
 *
 * Globals:		matrix[8][2]
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column) {
 	return (uint8_t)((matrix[ui_row] >> (15 - ui_column) ) & 1);
@@ -434,9 +344,6 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 *
 * Globals:		keine
 *
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
 * NOTES:	
 * 	Vergabe der  Pins:
 *        Spieler 1:  Richtung - Port - Pin (Anschluss)
@@ -451,11 +358,6 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 *                    Up       - PB2  - 16
 *                    Down     - PB6  - 10
 *    	Die Pins liegen alle in dieser Reihenfolge untereinander
-*
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t ui_input(){
     uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
@@ -496,9 +398,6 @@ uint8_t ui_input(){
 *
 * Globals:		keine
 *
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
 * NOTES:	
 * 	Vergabe der  Pins:
 *        Spieler 1:  Richtung - Port - Pin (Anschluss)
@@ -513,11 +412,6 @@ uint8_t ui_input(){
 *                    Up       - PB2  - 16
 *                    Down     - PB6  - 10
 *    	Die Pins liegen alle in dieser Reihenfolge untereinander
-*
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t ui_player1_L() {
     	uint8_t ui_bufferPF = 0x00;

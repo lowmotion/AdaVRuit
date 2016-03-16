@@ -43,25 +43,17 @@ struct Ball ball;
 struct Player playerL, playerR;
 
 /**************************************************************************
-* NAME:			Goal
+* NAME:				Goal
 * Description:		Diese Funktion incrementiert den Spielstand (Variable goal im struct)
-* 			des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
-* 			Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
-* 			des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
+* 					des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
+* 					Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
+* 					des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
 *
 * Subroutines Called:	???
 *
 * Returns:		keine
 *
 * Globals:		???
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
 *
 **************************************************************************/
 uint8_t Goal(uint8_t player){
@@ -138,14 +130,6 @@ uint8_t Goal(uint8_t player){
 *
 * Globals:		Ball ball; Player playerL, playerR;
 *
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t calcBallPosition() {
 	// Derzeitige Bewegungsrichtung
@@ -208,15 +192,6 @@ uint8_t calcBallPosition() {
 * Returns:		keine
 *
 * Globals:		Player playerL, playerR;
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t processInput(uint8_t ui_buttons){
 	/* Abbruchbedingung */
@@ -264,15 +239,6 @@ uint8_t processInput(uint8_t ui_buttons){
 * Returns:		keine
 *
 * Globals:		Ball ball; Player playerL, playerR;
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void printPong(){
     // Ausgabe des Balls
@@ -359,14 +325,6 @@ void printPong(){
 *
 * Globals:		Ball ball; Player playerL, playerR; uint8_t ui_timerFlag;
 *
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void initPong() {
 	/* Ball initialisieren */
@@ -414,15 +372,6 @@ void initPong() {
 * Returns:		keine
 *
 * Globals:		int8_t ui_timerFlag;
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void playPong() {
 	short play = 1;

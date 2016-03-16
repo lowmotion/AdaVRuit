@@ -17,8 +17,6 @@
 *****************************************************************************/
 
 #include "main.h"
-#include <util/delay.h>
-
 
  /**************************************************************************
 * NAME:			main
@@ -29,15 +27,6 @@
 * Returns:		int = 0;
 *
 * Globals:		???
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 int main() {
 	initSystem();

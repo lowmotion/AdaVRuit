@@ -31,7 +31,6 @@ uint8_t buttonRead = FALSE;
 unsigned long prevTime = 0;
 unsigned long delayTime = 500;
 */
-
 uint8_t random(uint8_t max)
 {
 	return TCNT1L % max;

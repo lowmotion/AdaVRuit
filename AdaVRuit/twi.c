@@ -29,15 +29,6 @@
 * Returns:		keine
 *
 * Globals:		keine
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void twi_init(void)
 {
@@ -61,15 +52,6 @@ void twi_init(void)
  * 				1 = Gerät nicht erreicht
 *
 * Globals:		keine
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t twi_start(uint8_t address)
 {
@@ -111,15 +93,6 @@ uint8_t twi_start(uint8_t address)
 * Returns:		keine
 * 
 * Globals:		keine
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 void twi_stop(void)
 {
@@ -141,19 +114,10 @@ void twi_stop(void)
 * Subroutines Called:	keine
 *
 * Returns:		Uint8_t:
- * 				0 = Byte erfolgreich übertragen
- * 				1 = Kein vom Empfänger ACK erhalten
+* 				0 = Byte erfolgreich übertragen
+* 				1 = Kein vom Empfänger ACK erhalten
 * 
 * Globals:		keine
-*
-* Programmer(s):	Michel, Marco, Michael, Christian, Tobias
-* Tested By: Date:
-*
-* NOTES:		-
-*
-* REVISION HISTORY
-* Date: By: Description:
-*
 **************************************************************************/
 uint8_t twi_write(uint8_t data)
 {

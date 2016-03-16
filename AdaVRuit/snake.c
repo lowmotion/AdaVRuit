@@ -36,24 +36,20 @@ unsigned long prevTime = 0;
 unsigned long delayTime = 500;
 */
 
-/*
-	Funktion:		initSnake
-	Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Die Startposition der Schlange 
-					wird initialisiert und der restliche Schlangenk�rper wird "gel�scht".
-					Anschlie�end wird die Position des ersten Futters initialisiert.*/
-void initSnake(uint8_t play0)
-{	
-	clearDisplay();
-	//Button-Initialisierung (fehlt noch)
-	snake.snakeLength=1;
-	snake.snakeX[0] = 4;	//Startposition
-	snake.snakeY[0] = 4;
-	for(int i=1; i<MAX_LENGTH; i++)	//restliche Glieder "abschalten"
+
+uint8_t random(uint8_t max)
+{
+	return TCNT1L % max;
+}
+
+//�berpr�ft, ob die Position bereits von der Schlange belegt ist
+uint8_t PartOfSnake(uint8_t x, uint8_t y)
+{
+	for (int i=0; i<snake.snakeLength; i++)
 	{
-		snake.snakeX[i] = snake.snakeY[i] = -1;
-	}	
-	food.foodLED=LED_ON;
-	makeFood(play0);	
+		if(x==snake.snakeX[i] && y==snake.snakeY[i]) return TRUE;
+	}
+	return FALSE;
 }
 
 /*
@@ -75,60 +71,18 @@ void makeFood(uint8_t playInit)
 	food.foodY = y;
 }
 
-uint8_t random(uint8_t max)
-{
-	return TCNT1L % max;
-}
-
-//�berpr�ft, ob die Position bereits von der Schlange belegt ist
-uint8_t PartOfSnake(uint8_t x, uint8_t y)
-{
-	for (int i=0; i<snake.snakeLength; i++)
-	{
-		if(x==snake.snakeX[i] && y==snake.snakeY[i]) return TRUE;
-	}
-	return FALSE;
-}
-
-/*
-Funktion:		playSnake
-Beschreibung:	Die Funktion ruft zuerst die Initialisierung auf. Die anschlie�ende Schleife fr�gt als 1. ab, 
-				ob die Richtung per Eingabe ge�ndert wurde. Nach der Zeit eines "Spielzyklus�"
-				werden alle Echtzeitfunktionen einmal ausgef�hrt. Zuletzt werden alle neuen Positionen
-				in die Ausgabe geschrieben*/
-void playSnake()
-{		
-	uint8_t play = 0;
-	initSnake(play);
-	
-	uint8_t ui_buttons;	
-	
-	play = 1;
-		
-	while (play)
-	{		
-		ui_buttons = ui_input();	//nimmt Eingangspins auf
-		checkButtons(ui_buttons);
-		if (ui_timerFlag==1)
-		{				
-			nextstep();			
-			buttonRead = FALSE;						
-			ui_timerFlag = 0; 
-		}
-		ui_buttons = 0;
-		drawSnake();
-	}	
-
-}
-
 /*
 Funktion:		checkButtons
 Beschreibung:	�berpr�ft, ob eine Eingabe im aktuellen Spielzyklus bereits registriert wurde.
 				Falls nicht, werden die Buttons `links� und `rechts� ausgewertet und gegebenenfalls
 				die Richtungsvariable um 1 in- oder dekrementiert, was einer Drehung um 90� entspricht
 				Anschlie�end wird ein Flag f�r die erfolgte Tastenauswertung gesetzt*/
-void checkButtons(uint8_t ui_buttons)
+uint8_t checkButtons(uint8_t ui_buttons)
 {
+	/* Abbruchbedingung */
+	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
+		return 0;
+	}
 	if(!buttonRead)	//Buttoneingabe bereits geschehen?
 	{
 		int currentDirection = direction;
@@ -144,6 +98,7 @@ void checkButtons(uint8_t ui_buttons)
 		}
 		buttonRead = (currentDirection != direction);	//Buttoneingabe registriert!
 	}
+	return 1;
 }
 
 /*
@@ -207,4 +162,54 @@ void drawSnake()
 	//printBit(snake.eraseX, snake.eraseY, LED_OFF);
 }
 
+/*
+	Funktion:		initSnake
+	Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Die Startposition der Schlange
+					wird initialisiert und der restliche Schlangenk�rper wird "gel�scht".
+					Anschlie�end wird die Position des ersten Futters initialisiert.*/
+void initSnake(uint8_t play0)
+{
+	clearDisplay();
+	//Button-Initialisierung (fehlt noch)
+	snake.snakeLength=1;
+	snake.snakeX[0] = 4;	//Startposition
+	snake.snakeY[0] = 4;
+	for(int i=1; i<MAX_LENGTH; i++)	//restliche Glieder "abschalten"
+	{
+		snake.snakeX[i] = snake.snakeY[i] = -1;
+	}
+	food.foodLED=LED_ON;
+	makeFood(play0);
+}
+
+/*
+Funktion:		playSnake
+Beschreibung:	Die Funktion ruft zuerst die Initialisierung auf. Die anschlie�ende Schleife fr�gt als 1. ab,
+				ob die Richtung per Eingabe ge�ndert wurde. Nach der Zeit eines "Spielzyklus�"
+				werden alle Echtzeitfunktionen einmal ausgef�hrt. Zuletzt werden alle neuen Positionen
+				in die Ausgabe geschrieben*/
+void playSnake()
+{
+	uint8_t play = 0;
+	initSnake(play);
+
+	uint8_t ui_buttons;
+
+	play = 1;
+
+	while (play)
+	{
+		ui_buttons = ui_input();	//nimmt Eingangspins auf
+		play = checkButtons(ui_buttons);
+		if (ui_timerFlag==1)
+		{
+			nextstep();
+			buttonRead = FALSE;
+			ui_timerFlag = 0;
+		}
+		ui_buttons = 0;
+		drawSnake();
+	}
+
+}
 

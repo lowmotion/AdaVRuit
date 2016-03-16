@@ -56,6 +56,9 @@
 #define LED_ON	1
 #define LED_OFF	0
 
+#define ROWS 	8
+#define COLUMNS 16
+
 /* Helligkeit der LEDs des Displays. Zwischen 0 und 15 */
 #ifndef LED_BRIGHTNESS
 #warning "LED_BRIGHTNESS was not set for AdaVRuit.h. Default is '7'. Possible between '0' and '15'!"

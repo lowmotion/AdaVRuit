@@ -25,8 +25,16 @@
 #include <avr/delay.h>
 
 /* Konstanten */
+#ifndef ROWS
+#warning "ROWS is not defined. Default = 8"
 #define ROWS 		8	// Anzahl der Zeilen des Spielfelds in Pixeln
+#endif
+
+#ifndef COLUMNS
+#warning "COLUMNS is not defined. Default = 16"
 #define COLUMNS 	16	// Anzahl der Spalten ders Spielfelds in Pixeln
+#endif
+
 #define BAT_WIDTH 	3	// Breite der Schläger der Spieler in Pixeln
 
 #define FIRST_LINE		0			// Index der ersten Zeile

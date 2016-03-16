@@ -195,6 +195,7 @@ Beschreibung:	Schreibt die aktuelle Position des Futters in den Anzeigespeicher.
 				in den Anzeigespeicher. L�scht zuletzt die "Spur" der Schlange */
 void drawSnake()
 {	
+	clearDisplay();
 	//Futter
 	if(food.foodX>=0 && food.foodX<16 && food.foodY>=0 && food.foodY<8) printBit(food.foodX, food.foodY, food.foodLED);
 	//Snake
@@ -203,7 +204,7 @@ void drawSnake()
 		if (snake.snakeX == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
 		printBit(snake.snakeX[i], snake.snakeY[i], LED_ON);
 	}
-	printBit(snake.eraseX, snake.eraseY, LED_OFF);
+	//printBit(snake.eraseX, snake.eraseY, LED_OFF);
 }
 
 

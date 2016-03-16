@@ -54,12 +54,12 @@ Beschreibung:	Diese Funktion erzeugt eine zuf�llige x-y-Position, gleicht sie 
 void makeFood(uint8_t playInit)
 {
 	if (playInit == 1)	printBit(food.foodX, food.foodY, LED_OFF);	//letztes Futter l�schen
-	uint8_t x = random(COLUMNS-1);
-	uint8_t y = random(ROWS-1);
+	uint8_t x = random(ROWS-1);
+	uint8_t y = random(COLUMNS-1);
 	while(PartOfSnake(x,y))		//Schlange bereits an neuer Futterposition?
 	{
-		x = random(COLUMNS-1);
-		y = random(ROWS-1);
+		x = random(ROWS-1);
+		y = random(COLUMNS-1);
 	}
 	food.foodX = x;
 	food.foodY = y;
@@ -126,19 +126,19 @@ void nextstep()
 	{
 		case UP:
 			snake.snakeY[0] = snake.snakeY[0]+1;
-			if (snake.snakeY[0]>=ROWS)	snake.snakeY[0]=0;	
+			if (snake.snakeY[0]>=COLUMNS)	snake.snakeY[0]=0;	
 			break;
 		case RIGHT:
 			snake.snakeX[0] = snake.snakeX[0]+1;
-			if (snake.snakeX[0]>=COLUMNS)	snake.snakeX[0]=0;
+			if (snake.snakeX[0]>=ROWS)	snake.snakeX[0]=0;
 			break;
 		case DOWN:
 			snake.snakeY[0] = snake.snakeY[0]-1;
-			if (snake.snakeY[0]<0)		snake.snakeY[0]=COLUMNS-1;
+			if (snake.snakeY[0]<0)		snake.snakeY[0]=ROWS-1;
 			break;
 		case LEFT:
 			snake.snakeX[0] = snake.snakeX[0]-1;
-			if (snake.snakeX[0]<0)		snake.snakeX[0]=ROWS-1;
+			if (snake.snakeX[0]<0)		snake.snakeX[0]=COLUMNS-1;
 			break;
 	}
 	if((snake.snakeX[0] == food.foodX) && (snake.snakeY[0] == food.foodY))	//Futter erreicht?

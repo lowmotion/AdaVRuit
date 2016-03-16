@@ -158,7 +158,7 @@ void drawSnake()
 {	
 	clearDisplay();
 	//Futter
-	if(food.foodX>=0 && food.foodX<16 && food.foodY>=0 && food.foodY<8) printBit(food.foodX, food.foodY, food.foodLED);
+	if(food.foodX>=0 && food.foodX<ROWS && food.foodY>=0 && food.foodY<COLUMNS) printBit(food.foodX, food.foodY, food.foodLED);
 	//Snake
 	for(int i=0; i<snake.snakeLength; i++)
 	{

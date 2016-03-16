@@ -42,8 +42,7 @@ struct Player {
 struct Ball ball;
 struct Player playerL, playerR;
 
-
- /**************************************************************************
+/**************************************************************************
 * NAME:			Goal
 * Description:		Diese Funktion incrementiert den Spielstand (Variable goal im struct)
 * 			des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
@@ -65,7 +64,7 @@ struct Player playerL, playerR;
 * Date: By: Description:
 *
 **************************************************************************/
-void Goal(uint8_t player){
+uint8_t Goal(uint8_t player){
 	clearDisplay();
 	printCharacters('T', 'O', 'R');
 	_delay_ms(1500);
@@ -81,8 +80,7 @@ void Goal(uint8_t player){
 				_delay_ms(1500);
 				printCharacters('W', 'I', 'N');
 				_delay_ms(2000);
-				initPong();
-				return;
+				return 0;
 			}
 			/* Ball zurücksetzen */
 			ball.posX = 8;
@@ -102,8 +100,7 @@ void Goal(uint8_t player){
 				_delay_ms(1500);
 				printCharacters('W', 'I', 'N');
 				_delay_ms(2000);
-				initPong();
-				return;
+				return 0;
 			}
 			/* Ball zurücksetzen */
 			ball.posX = 7;
@@ -115,6 +112,7 @@ void Goal(uint8_t player){
 			playerL.prevY = playerL.posY;
 			playerR.prevX = playerR.posX;
 			playerR.prevY = playerR.posY;
+			break;
 	}
 
 	printCharacters(playerL.score + 48, ':', playerR.score +48);
@@ -123,7 +121,7 @@ void Goal(uint8_t player){
 	/* Timer für die Spielgeschwindigkeit zurücksetzen */
 	ui_timerOffset = TIMER_START;
 	ui_timerFlag = FALSE;
-	return;
+	return 1;
 
 };
 
@@ -149,7 +147,7 @@ void Goal(uint8_t player){
 * Date: By: Description:
 *
 **************************************************************************/
-void calcBallPosition() {
+uint8_t calcBallPosition() {
 	// Derzeitige Bewegungsrichtung
 	int8_t movX, movY;				// kein unsigned, da +/-
 	movX = ball.posX - ball.prevX;
@@ -166,8 +164,7 @@ void calcBallPosition() {
 		else if(playerL.posY == ball.prevY) {movX = +1; movY = 0;}
 		else if(playerL.posY == ball.prevY + 1) {movX = +1; movY = -1;}
 		else {
-			Goal(1);
-			return;		// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
+			return Goal(1);	// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
 		}
 	}
 
@@ -177,8 +174,7 @@ void calcBallPosition() {
 		else if(playerR.posY == ball.prevY) {movX = -1; movY = 0;}
 		else if(playerR.posY == ball.prevY + 1) {movX = -1; movY = -1;}
 		else {
-			Goal(0);
-			return;		// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
+			return Goal(0);		// Beendet die Funktion calcBallPosition, da in Goal() neu initialisiert wird
 		}
 	}
 
@@ -197,6 +193,7 @@ void calcBallPosition() {
 	// Berechnung der neuen Position
 	ball.posX = ball.prevX + movX;
 	ball.posY = ball.prevY + movY;
+	return 1;
 };
 
 
@@ -349,6 +346,7 @@ void printPong(){
 	}
 }
 
+
 /**************************************************************************
 * NAME:			initPong
 * Description:		Diese Funktion initialisiert das Spiel Pong. Es werden zwei Spieler initialisiert
@@ -402,6 +400,7 @@ void initPong() {
 }
 
 
+
  /**************************************************************************
 * NAME:			playPong
 * Description:		Hauptroutine
@@ -438,8 +437,11 @@ void playPong() {
 			if(ui_timerOffset < TIMER_MAX) {
 				ui_timerOffset += TIMER_STEPSIZE;
 			}
-			calcBallPosition();
 			play = processInput(ui_buttons);
+			if(!play) {
+				return;
+			}
+			play = calcBallPosition();
 			ui_buttons = 0;
 			printPong();
 			ui_timerFlag = 0;

@@ -215,6 +215,7 @@ void playSnake()
 		}
 		ui_buttons = 0;
 	}
+	_delay_ms(500);
 
 }
 

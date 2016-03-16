@@ -388,6 +388,7 @@ void playPong() {
 			}
 			play = processInput(ui_buttons);
 			if(!play) {
+				_delay_ms(500);
 				return;
 			}
 			play = calcBallPosition();
@@ -396,6 +397,7 @@ void playPong() {
 			ui_timerFlag = 0;
 		}
 	}
+	_delay_ms(500);
 }
 
 

@@ -6,7 +6,7 @@
 /****************
  * Defines
  ****************/
-#define GAME_SPEED 3
+#define GAME_SPEED 2
 #define FADE_OUT_SPEED 60
 
 /*****************

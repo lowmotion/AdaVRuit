@@ -20,11 +20,7 @@ struct Food		{
 	uint8_t foodLED;		//f�r eventuelle Anzeigeeffekte
 	} food;
 	
-/*
 //Globale Variablen
-
-struct Snake snake;
-struct Food food;*/
 
 
 //f�r Button-Abfrage
@@ -35,7 +31,6 @@ uint8_t buttonRead = FALSE;
 unsigned long prevTime = 0;
 unsigned long delayTime = 500;
 */
-
 
 uint8_t random(uint8_t max)
 {
@@ -112,11 +107,11 @@ void nextstep()
 	uint8_t play1 = 1;
 	for(int i=snake.snakeLength-1; i>0; i--)	//Bewegung Schlangenk�rper
 	{
-		if (snake.snakeX[i+1] == -1)		//eventuelles L�schbit f�r Ausgabe vorbereiten
+		/*if (snake.snakeX[i+1] == -1)		//eventuelles L�schbit f�r Ausgabe vorbereiten
 		{
 			snake.eraseX = snake.snakeX[i];
 			snake.eraseY = snake.snakeY[i];
-		}
+		}*/
 		snake.snakeX[i] = snake.snakeX[i-1];
 		snake.snakeY[i] = snake.snakeY[i-1];
 	}
@@ -124,15 +119,19 @@ void nextstep()
 	{
 		case UP:
 			snake.snakeY[0] = snake.snakeY[0]+1;
+			if (snake.snakeY[0]>=ROWS)	snake.snakeY[0]=0;	
 			break;
 		case RIGHT:
 			snake.snakeX[0] = snake.snakeX[0]+1;
+			if (snake.snakeX[0]>=COLUMNS)	snake.snakeX[0]=0;
 			break;
 		case DOWN:
 			snake.snakeY[0] = snake.snakeY[0]-1;
+			if (snake.snakeY[0]<0)		snake.snakeY[0]=COLUMNS-1;
 			break;
 		case LEFT:
 			snake.snakeX[0] = snake.snakeX[0]-1;
+			if (snake.snakeX[0]<0)		snake.snakeX[0]=ROWS-1;
 			break;
 	}
 	if((snake.snakeX[0] == food.foodX) && (snake.snakeY[0] == food.foodY))	//Futter erreicht?
@@ -170,7 +169,6 @@ void drawSnake()
 void initSnake(uint8_t play0)
 {
 	clearDisplay();
-	//Button-Initialisierung (fehlt noch)
 	snake.snakeLength=1;
 	snake.snakeX[0] = 4;	//Startposition
 	snake.snakeY[0] = 4;
@@ -206,9 +204,9 @@ void playSnake()
 			nextstep();
 			buttonRead = FALSE;
 			ui_timerFlag = 0;
+			drawSnake();
 		}
 		ui_buttons = 0;
-		drawSnake();
 	}
 
 }

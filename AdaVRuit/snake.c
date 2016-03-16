@@ -64,12 +64,12 @@ Beschreibung:	Diese Funktion erzeugt eine zuf�llige x-y-Position, gleicht sie 
 void makeFood(uint8_t playInit)
 {
 	if (playInit == 1)	printBit(food.foodX, food.foodY, LED_OFF);	//letztes Futter l�schen
-	uint8_t x = random(15);
-	uint8_t y = random(7);
+	uint8_t x = random(COLUMNS-1);
+	uint8_t y = random(ROWS-1);
 	while(PartOfSnake(x,y))		//Schlange bereits an neuer Futterposition?
 	{
-		x = random(15);
-		y = random(7);
+		x = random(COLUMNS-1);
+		y = random(ROWS-1);
 	}
 	food.foodX = x;
 	food.foodY = y;
@@ -201,7 +201,7 @@ void drawSnake()
 	//Snake
 	for(int i=0; i<snake.snakeLength; i++)
 	{
-		if (snake.snakeX == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
+		if (snake.snakeX[i] == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
 		printBit(snake.snakeX[i], snake.snakeY[i], LED_ON);
 	}
 	//printBit(snake.eraseX, snake.eraseY, LED_OFF);

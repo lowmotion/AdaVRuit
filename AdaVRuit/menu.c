@@ -424,7 +424,7 @@ void menu()
 		counter++;              //Counter wird erh�ht um das n�chste Bild der Animation auszuw�hlen
 		if (counter >= maxAnimationSteps[currentSelection - 1]) counter = 0;
 
-		_delay_ms(200);
+		_delay_ms(300);
 	}
 }
 

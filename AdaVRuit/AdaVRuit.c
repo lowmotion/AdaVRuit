@@ -8,7 +8,10 @@
 * 				Es liefert Funktionen zur Ein- und Ausgabe und einen Timer, um
 * 				Anwendungen und Spiele zu Takten.
 *
-* Von:	Michel, Marco, Michael, Christian, Tobias
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
+*
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 
@@ -49,9 +52,9 @@ volatile uint16_t ui_timerOffset = 0;
 *
 * Subroutinen:	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void initATmega() {
 	/* Taster */
@@ -70,9 +73,9 @@ void initATmega() {
 *
 * Subroutinen:	twi_init() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void initTWI() {
 	twi_init();
@@ -86,9 +89,9 @@ void initTWI() {
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void clearDisplay() {
 	cli();
@@ -115,9 +118,9 @@ void clearDisplay() {
 * 				twi_stop() aus twi.h
 * 				clearDisplay()
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void initDisplay(uint8_t brightness) {
 	/* LED Treiber anschalten */
@@ -151,9 +154,9 @@ void initDisplay(uint8_t brightness) {
 *
 * Subroutinen:	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		Interrupt-Flag
+* Globale Var.:	Interrupt-Flag
 * 				ui_timerOffset
 ******************************************************************************/
 void initTimer() {
@@ -184,9 +187,9 @@ void initTimer() {
 *
 * Subroutinen:	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		ui_timerFlag
+* Globale Var.:	ui_timerFlag
 * 				ui_timerOffset
 ******************************************************************************/
 ISR(TIMER1_OVF_vect) {
@@ -204,9 +207,9 @@ ISR(TIMER1_OVF_vect) {
 *
 * Subroutinen:	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 ISR(__vector_default) {
 
@@ -221,9 +224,9 @@ ISR(__vector_default) {
 *				initDisplay()
 *				initTimer()
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void initSystem() {
 	initATmega();
@@ -244,9 +247,9 @@ void initSystem() {
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 	cli();
@@ -292,9 +295,9 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void printArray(uint16_t ui_matrix[8]) {
 	cli();
@@ -331,9 +334,9 @@ void printArray(uint16_t ui_matrix[8]) {
 * 				twi_stop() aus twi.h
 * 				printArray()
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void printVerticalArray(uint8_t board[16]) {
 	uint16_t newBoard[8] = {0};
@@ -354,9 +357,9 @@ void printVerticalArray(uint8_t board[16]) {
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: 1 oder 0
+* Rückgabewert:	uint8_t: 1 oder 0
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column) {
 	return (uint8_t)((matrix[ui_row] >> (15 - ui_column) ) & 1);
@@ -369,9 +372,9 @@ uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column) {
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: 1 wenn gedrückt oder 0 wenn nicht gedrückt
+* Rückgabewert:	uint8_t: 1 wenn gedrückt oder 0 wenn nicht gedrückt
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t b_player1_L(uint8_t _ui_buttons) {return ((_ui_buttons & BIT7) >> 7);}
 uint8_t b_player1_R(uint8_t _ui_buttons) {return ((_ui_buttons & BIT6) >> 6);}
@@ -389,9 +392,9 @@ uint8_t b_player2_D(uint8_t _ui_buttons) {return (_ui_buttons & BIT0);}
 *
 * Subroutinen: 	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void resetPlayer1_L(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT7);}
 void resetPlayer1_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT6);}
@@ -424,7 +427,7 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: ui_buttons;
+* Rückgabewert:	uint8_t: ui_buttons;
 *                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
@@ -432,7 +435,7 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 *                         	Bit 2/6 -> Up
 *                         	Bit 3/7 -> Down
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_input(){
     uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
@@ -475,7 +478,7 @@ uint8_t ui_input(){
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: ui_buttons;
+* Rückgabewert:	uint8_t: ui_buttons;
 *                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
@@ -483,7 +486,7 @@ uint8_t ui_input(){
 *                         	Bit 2/6 -> Up
 *                         	Bit 3/7 -> Down
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_player1_L() {
     	uint8_t ui_bufferPF = 0x00;

@@ -8,7 +8,10 @@
 * 				Es liefert Funktionen zur Ein- und Ausgabe und einen Timer, um
 * 				Anwendungen und Spiele zu Takten.
 *
-* Von:	Michel, Marco, Michael, Christian, Tobias
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
+*
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 
@@ -98,9 +101,9 @@ extern volatile uint16_t ui_timerOffset;
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void clearDisplay();
 
@@ -113,9 +116,9 @@ void clearDisplay();
 *				initDisplay()
 *				initTimer()
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void initSystem();
 
@@ -130,9 +133,9 @@ void initSystem();
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState);
 
@@ -145,9 +148,9 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState);
 * 				twi_write() aus twi.h
 * 				twi_stop() aus twi.h
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		matrix
+* Globale Var.:	matrix
 ******************************************************************************/
 void printArray(uint16_t ui_matrix[8]);
 
@@ -162,9 +165,9 @@ void printArray(uint16_t ui_matrix[8]);
 * 				twi_stop() aus twi.h
 * 				printArray()
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void printVerticalArray(uint8_t board[16]);
 
@@ -175,9 +178,9 @@ void printVerticalArray(uint8_t board[16]);
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: 1 oder 0
+* Rückgabewert:	uint8_t: 1 oder 0
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 
@@ -203,7 +206,7 @@ uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: ui_buttons;
+* Rückgabewert:	uint8_t: ui_buttons;
 *                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
@@ -211,7 +214,7 @@ uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 *                         	Bit 2/6 -> Up
 *                         	Bit 3/7 -> Down
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_input();
 
@@ -238,7 +241,7 @@ uint8_t ui_input();
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: ui_buttons;
+* Rückgabewert:	uint8_t: ui_buttons;
 *                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
@@ -246,7 +249,7 @@ uint8_t ui_input();
 *                         	Bit 2/6 -> Up
 *                         	Bit 3/7 -> Down
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t ui_player1_L();
 uint8_t ui_player1_R();
@@ -264,9 +267,9 @@ uint8_t ui_player2_D();
 *
 * Subroutinen: 	keine
 *
-* Returns:		uint8_t: 1 wenn gedrückt oder 0 wenn nicht gedrückt
+* Rückgabewert:	uint8_t: 1 wenn gedrückt oder 0 wenn nicht gedrückt
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 uint8_t b_player1_L(uint8_t _ui_buttons);
 uint8_t b_player1_R(uint8_t _ui_buttons);
@@ -284,9 +287,9 @@ uint8_t b_player2_D(uint8_t _ui_buttons);
 *
 * Subroutinen: 	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
+* Globale Var.:	keine
 ******************************************************************************/
 void resetPlayer1_L(uint8_t *_ui_buttons);
 void resetPlayer1_R(uint8_t *_ui_buttons);

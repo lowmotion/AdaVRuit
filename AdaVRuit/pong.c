@@ -33,7 +33,7 @@ struct Ball {
  * 	Beschreibung: 	Diese Struktur stellt einen Spieler dar.
  */
 struct Player {
-	uint8_t posX, posY, prevX, prevY, width, score;
+	uint8_t posX, posY, prevX, prevY, width, score, bot;
 };
 
 
@@ -177,6 +177,22 @@ uint8_t calcBallPosition() {
 	// Berechnung der neuen Position
 	ball.posX = ball.prevX + movX;
 	ball.posY = ball.prevY + movY;
+	if(playerL.bot) {
+		//if(!playerL.posY == ball.posY) {
+		if(ball.posY < ROWS && ball.posY > 0){
+			playerL.prevY = playerL.posY;
+			playerL.posY = ball.posY-1;
+		}
+		//}
+	}
+	if(playerR.bot) {
+		//if(!playerR.posY == ball.posY) {
+		if(ball.posY < ROWS-1 && ball.posY >= 0){
+			playerR.prevY = playerR.posY;
+			playerR.posY = ball.posY+1;
+		}
+		//}
+	}
 	return 1;
 };
 
@@ -201,13 +217,15 @@ uint8_t processInput(uint8_t ui_buttons){
 
     // Bewegung des linken Schl�gers
     if(b_player1_U(ui_buttons) == 1){                         // Bewegung nach oben
-        playerL.prevY = playerL.posY;
+        playerL.bot = 0;
+    	playerL.prevY = playerL.posY;
         if(playerL.posY > 0) {
 			playerL.posY -= 1;
 		}
     }
     if(b_player1_D(ui_buttons) == 1){                         // Bewegung nach unten
-        playerL.prevY = playerL.posY;
+    	playerL.bot = 0;
+    	playerL.prevY = playerL.posY;
         if(playerL.posY < (ROWS-1)) {
 			playerL.posY += 1;
 		}
@@ -215,13 +233,15 @@ uint8_t processInput(uint8_t ui_buttons){
 
     // Bewegung des rechten Schl�gers
     if(b_player2_U(ui_buttons) == 1){                         // Bewegung nach oben
-        playerR.prevY = playerR.posY;
+    	playerR.bot = 0;
+    	playerR.prevY = playerR.posY;
         if(playerR.posY > 0) {
         	playerR.posY -= 1;
         }
     }
     if(b_player2_D(ui_buttons) == 1){                         // Bewegung nach unten
-        playerR.prevY = playerR.posY;
+    	playerR.bot = 0;
+    	playerR.prevY = playerR.posY;
         if(playerR.posY < (ROWS-1)) {
         	playerR.posY += 1;
         }
@@ -331,7 +351,7 @@ void initPong() {
 	ball.posX = 7;
 	ball.posY = 4;
 	ball.prevX = 8;
-	ball.prevY = 4;
+	ball.prevY = 5;
 
 	/* Player Links */
 	playerL.posX = 0;
@@ -340,14 +360,16 @@ void initPong() {
 	playerL.prevY = 3;
 	playerL.width = BAT_WIDTH;
 	playerL.score = 0;
+	playerL.bot =1;
 
 	/* Player Links */
 	playerR.posX = 15;
-	playerR.posY = 3;
+	playerR.posY = 5;
 	playerR.prevX = 15;
-	playerR.prevY = 3;
+	playerR.prevY = 5;
 	playerR.width = BAT_WIDTH;
 	playerR.score = 0;
+	playerR.bot = 1;
 
 	ui_timerOffset = TIMER_START;
 
@@ -374,6 +396,7 @@ void initPong() {
 * Globals:		int8_t ui_timerFlag;
 **************************************************************************/
 void playPong() {
+	_delay_ms(500);
 	short play = 1;
 	uint8_t ui_buttons = 0;
 	initPong();

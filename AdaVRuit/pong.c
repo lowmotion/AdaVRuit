@@ -38,7 +38,10 @@ struct Player {
 };
 
 
-
+/**************************
+ * GLOBALE VARIABLEN
+ **************************/
+ 
 struct Ball ball;
 struct Player playerL, playerR;
 

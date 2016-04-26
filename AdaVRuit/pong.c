@@ -1,61 +1,68 @@
-
 /*****************************************************************************
 *
-* FILE: 		pong.c
-* PROJECT:		Spielekonsole
-* MODULE:		???
+* Datei: 		pong.c
+* Projekt:		Spielekonsole
+* Modul:		Spiel Pong
 *
-* Description:		Diese Datei enthällt die Hauptroutine und alle Funktionen des Speiels "Pong"
+* Beschreibung:		Diese Datei enthällt die Hauptroutine und alle Funktionen des Speiels "Pong"
 *
-* Notes:		-
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
 *
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date: 07.03.2016
-* BY:	Michel, Marco, Michael, Christian, Tobias
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
- 
- 
-
 #include "pong.h"
 
 
-/*	Struktur: 	Ball
- * 	Beschreibung: 	Diese Struktur stellt den Spielball dar.
- */
+ /*****************************************************************************
+ * Name:		Ball
+ * Beschreibung:	Diese Struktur stellt den Spielball dar und beinhaltet
+ * 			sowohl seine aktuelle, als auch seine vorherige Position
+ *****************************************************************************/
 struct Ball {
 	uint8_t posX, posY, prevX, prevY;
 };
 
-/*	Struktur: 	Player (Spieler)
- * 	Beschreibung: 	Diese Struktur stellt einen Spieler dar.
- */
+
+ /*****************************************************************************
+ * Name:		Player
+ * Beschreibung:	Diese Struktur stellt einen Spieler dar.
+ * 			Sie enthällt die Informationen über die derzeitige und 
+ * 			vorherige Schlägerposition, sowie dessen Breite.
+ * 			Zusätzlich wird darin gespeichter, ob der Bot aktiv ist
+ * 			und die erzielten Punkte des Spielers gezählt.
+ *****************************************************************************/
 struct Player {
 	uint8_t posX, posY, prevX, prevY, width, score, bot;
 };
 
 
-/* Globale Variablen */
 
 struct Ball ball;
 struct Player playerL, playerR;
 
-/**************************************************************************
-* NAME:				Goal
-* Description:		Diese Funktion incrementiert den Spielstand (Variable goal im struct)
-* 					des übergebenen Spielers. Der Ball wird zurückgesetzt und die vorherige
-* 					Position wird so gesetzt, dass Ball sich als erstes wieder in die Richtung
-* 					des Spielers bewegt, der keinen Punkt gemacht hat. Somit Aufschlag hat.
+
+
+/*****************************************************************************
+* Name:			Goal
+* Beschreibung:		Diese Funktion incrementiert den Spielstand (Variable
+* 			score im struct) des übergebenen Spielers. Die Ballposition
+* 			wird zurückgesetzt und die vorherige Position wird so 
+* 			gesetzt, dass Ball sich als erstes wieder in die Richtung
+* 			des Spielers bewegt, der keinen Punkt gemacht hat.
+* 			Somit Aufschlag hat.
 *
-* Subroutines Called:	???
+* Subroutinen:		clearDisplay() aus AdaVRuit_Font.h;
+*			printCharacters() aus AdaVRuit_Font.h
+*			_delay_ms() aus <util/delay.h>	
 *
-* Returns:		keine
+* Returns:		uint8_t: 1 oder 0
 *
-* Globals:		???
-*
-**************************************************************************/
+* Globals:		struct Ball ball;
+*			struct Player playerL, playerR;
+* 			uint8_t ui_timerOffset, ui_timerFlag  aus AdaVRuit.h
+******************************************************************************/
 uint8_t Goal(uint8_t player){
 	clearDisplay();
 	printCharacters('T', 'O', 'R');
@@ -118,19 +125,23 @@ uint8_t Goal(uint8_t player){
 };
 
 
-/**************************************************************************
-* NAME:			calcBallPosition
-* Description:		Berechnet die Position des Balls neu. Hierbei werden die derzeitige Bewegungsrichtung
-* 			des Balls, Wände und Schläger der Spieler berücksichtigt. Falls der Ball eine der
-* 			Seitenwände erreicht, wird die Funktion Goal() aufgerufen, da ein Tor gefallen ist.
+
+/*****************************************************************************
+* Name:			calcBallPosition
+* Beschreibung:		Berechnet die Position des Balls neu. Hierbei werden 
+* 			die derzeitige Bewegungsrichtung des Balls, Wände und 
+* 			Schläger der Spieler berücksichtigt. Falls der Ball eine der
+* 			Seitenwände erreicht, wird die Funktion Goal() aufgerufen, 
+* 			da ein Tor gefallen ist.
 *
-* Subroutines Called:	keine
 *
-* Returns:		keine
+* Subroutinen:		Goal();
 *
-* Globals:		Ball ball; Player playerL, playerR;
+* Returns:		uint8_t: 1 oder 0
 *
-**************************************************************************/
+* Globals:		struct Ball ball;
+*			struct Player playerL, playerR;
+******************************************************************************/
 uint8_t calcBallPosition() {
 	// Derzeitige Bewegungsrichtung
 	int8_t movX, movY;				// kein unsigned, da +/-
@@ -198,17 +209,23 @@ uint8_t calcBallPosition() {
 
 
 
+/*****************************************************************************
+* Name:			processInput
+* Beschreibung:		Verarbeitet die Eingabe der Taster der Spieler und 
+* 			bewegt die Schläger nach oben bzw. unten
+*
+* Subroutinen:		b_player1_U() aus AdaVRuit.h
+* 			b_player1_D() aus AdaVRuit.h
+* 			b_player1_L() aus AdaVRuit.h
+* 			b_player1_R() aus AdaVRuit.h
+* 			b_player2_U() aus AdaVRuit.h
+* 			b_player2_D() aus AdaVRuit.h
+*
+* Returns:		uint8_t: 1 oder 0
+*
+* Globals:		struct Player playerL, playerR;
+******************************************************************************/
 
-/**************************************************************************
-* NAME:			processInput
-* Description:		Verarbeitet die Eingabe der Taster der Spieler und bewegt die Schläger nach oben bzw. unten
-*
-* Subroutines Called:	keine
-*
-* Returns:		keine
-*
-* Globals:		Player playerL, playerR;
-**************************************************************************/
 uint8_t processInput(uint8_t ui_buttons){
 	/* Abbruchbedingung */
 	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
@@ -250,16 +267,19 @@ uint8_t processInput(uint8_t ui_buttons){
 }
 
 
-/**************************************************************************
-* NAME:			printPong
-* Description:		Diese Funktion gibt die Bewebung des Balles und der beiden Schlaeger auf der LED Matrix aus
+
+/*****************************************************************************
+* Name:			printPong
+* Beschreibung:		Diese Funktion gibt die Bewebung des Balles und 
+* 			der beiden Schlaeger auf der LED Matrix aus.
 *
-* Subroutines Called:	printBit()
+* Subroutinen:		cprintBit(); aus AdaVRuit.h
 *
 * Returns:		keine
 *
-* Globals:		Ball ball; Player playerL, playerR;
-**************************************************************************/
+* Globals:		struct Ball ball;
+*			struct Player playerL, playerR;
+******************************************************************************/
 void printPong(){
     // Ausgabe des Balls
     if(ball.posX != ball.prevX){                    // Immer, wenn es eine Ballbewegung gibt, findet diese auch in X-Richtung statt. Eine senkrechte  Bewegung nach oben ist unm�glich
@@ -333,19 +353,25 @@ void printPong(){
 }
 
 
-/**************************************************************************
-* NAME:			initPong
-* Description:		Diese Funktion initialisiert das Spiel Pong. Es werden zwei Spieler initialisiert
-* 			und auf dem Spielfeld positioniert. Jeweils links und rechts oben in den Ecken.
-* 			Außerdem wird der Spielball so positioniert, dass der linke Spieler anfängt. (Zeile 4 Spalte 8)
+
+/*****************************************************************************
+* Name:			initPong
+* Beschreibung:		Diese Funktion initialisiert das Spiel Pong. Es 
+* 			werden zwei Spieler initialisiert und auf dem Spielfeld
+* 			positioniert. Jeweils links und rechts oben in den Ecken.
+* 			Außerdem wird der Spielball so positioniert, dass der 
+* 			linke Spieler anfängt. (Zeile 4 Spalte 8)
 *
-* Subroutines Called:	???
+* Subroutinen:		clearDisplay()
+*			printPong() aus AdaVRuit.h
 *
 * Returns:		keine
 *
-* Globals:		Ball ball; Player playerL, playerR; uint8_t ui_timerFlag;
-*
-**************************************************************************/
+* Globals:		SREG: aus <avr/io.h>
+* 			struct Ball ball
+*			struct Player playerL, playerR
+* 			uint8_t ui_timerOffset:  aus AdaVRuit.h
+******************************************************************************/
 void initPong() {
 	/* Ball initialisieren */
 	ball.posX = 7;
@@ -381,20 +407,22 @@ void initPong() {
 
 
 
- /**************************************************************************
-* NAME:			playPong
-* Description:		Hauptroutine
+/*****************************************************************************
+* Name:			playPong
+* Beschreibung:		Hauptroutine des Spiels Pong
 *
-* Subroutines Called:	calcBallPosition();
-*			movecurer();
-*			printPong();
-*			eingabe();
-*			initPong();
-* 
+* Subroutinen:		_delay_ms() aus <util/delay.h>	
+* 			initPong()
+* 			ui_input() aus AdaVRuit.h
+* 			processInput()
+* 			calcBallPosition()
+* 			printPong()
+*
 * Returns:		keine
 *
-* Globals:		int8_t ui_timerFlag;
-**************************************************************************/
+* Globals:		int8_t ui_timerFlag:  aus AdaVRuit.h
+* 
+******************************************************************************/
 void playPong() {
 	_delay_ms(500);
 	short play = 1;

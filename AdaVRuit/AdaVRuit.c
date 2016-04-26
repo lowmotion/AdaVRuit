@@ -1,45 +1,58 @@
- /*****************************************************************************
+/*****************************************************************************
 *
-* FILE: 		ATmega32U4.c
-* PROJECT:		Spielekonsole
-* MODULE:		???
+* Datei: 		AdaVRuit.c
+* Projekt:		Spielekonsole
+* Modul:		Zentrale Einheit
 *
-* Description:		???
+* Beschreibung:	Dieses Modul stellt die Zentrale Einheit der Spielekonsole dar.
+* 				Es liefert Funktionen zur Ein- und Ausgabe und einen Timer, um
+* 				Anwendungen und Spiele zu Takten.
 *
-* Notes:		-
-*
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date: 07.03.2016
-* BY:	Michel, Marco, Michael, Christian, Tobias
+* Von:	Michel, Marco, Michael, Christian, Tobias
 *
 *****************************************************************************/
 
 #include "AdaVRuit.h"
 
-/*
- * Variable:		matrix
- * Beschreibung:	Diese Matrix representiert die derzeitige Ausgabe auf den LEDs. Sie besitzt acht Zeilen und zwei Spalten
- * 					mit jeweils acht Bit. Jedes einzelne Bit ist also eine LED.
- * 					8 Zeilen x 2 Spalten x 8 Bit = 16 Spalten x 8 Reihen
- */
+/*****************************************************************************
+ * Name:			matrix
+ * Beschreibung:	Diese Matrix representiert die derzeitige Ausgabe auf den
+ * 					LEDs. Sie besitzt acht Zeilen und zwei Spalten mit jeweils
+ * 					16 Bit. Jedes einzelne Bit ist also eine LED.
+ * 					16 Spalten x 8 Reihen
+ *****************************************************************************/
 uint16_t matrix[8] = {};
 
-
+/*****************************************************************************
+ * Name:			ui_timerFlag
+ * Beschreibung:	Diese Variable wird gesetzt, wenn ein Timerüberlauf
+ * 					eintritt. Sie muss von der Anwendung selbst, nach
+ * 					Abarbeitung, zurückgesetzt werden.
+ *****************************************************************************/
 volatile uint8_t ui_timerFlag = 0;
+/*****************************************************************************
+ * Name:			ui_timerOffset
+ * Beschreibung:	Diese Variable bestimmt wie lange der Timer läuft. Der
+ * 					maximale Wert und damit die kürzeste Zeit ist
+ * 					UINT16_MAX = 65536. Um eine bestimmte Zeit zu erzeugen,
+ * 					kann folgende Formel verwendet werden:
+ * 						ui_timerOffset = UINT16_MAX-(X*(F_CPU/1024))
+ * 					X ist dabei die Anzahl der Sekunden (kann auch z.B. 2,4
+ * 					sein).
+ * 					X kann maximal = UINT16_MAX/(F_CPU/1024)= 4,19 s sein
+ *****************************************************************************/
 volatile uint16_t ui_timerOffset = 0;
 
-/**************************************************************************
-* NAME:			initATMega32
-* Description:		Initialisierung der Ein- und Ausgänge
+/*****************************************************************************
+* Name:			initATMega
+* Beschreibung:	Initialisierung der Ein- und Ausgänge des ATmega32U4
 *
-* Subroutines Called:	keine
+* Subroutinen:	keine
 *
 * Returns:		keine
 *
 * Globals:		keine
-**************************************************************************/
+******************************************************************************/
 void initATmega() {
 	/* Taster */
     DDRB = 0b00000000;       // Eingänge PortB 1 3 2 6
@@ -51,30 +64,32 @@ void initATmega() {
 }
 
 
-/**************************************************************************
-* NAME:			initTWI
-* Description:		Initialisierung des TWI (I2C)
+/*****************************************************************************
+* Name:			initTWI
+* Beschreibung:	Initialisierung des Two-Wire-Interface (I²C)
 *
-* Subroutines Called:	???
+* Subroutinen:	twi_init() aus twi.h
 *
 * Returns:		keine
 *
-* Globals:		???
-**************************************************************************/
+* Globals:		keine
+******************************************************************************/
 void initTWI() {
 	twi_init();
 }
 
-/**************************************************************************
-* NAME:				clearDisplay
-* Description:		Setzt das Display auf 0 zurück.
+/*****************************************************************************
+* Name:			clearDisplay
+* Beschreibung:	Setzt das Display zurück und schreibt 0 in die matrix.
 *
-* Subroutines Called:	???
+* Subroutinen:	twi_start() aus twi.h
+* 				twi_write() aus twi.h
+* 				twi_stop() aus twi.h
 *
 * Returns:		keine
 *
 * Globals:		matrix
-**************************************************************************/
+******************************************************************************/
 void clearDisplay() {
 	cli();
 	twi_start(SLAVE_ADRESS);
@@ -90,17 +105,20 @@ void clearDisplay() {
 }
 
 
-/**************************************************************************
-* NAME:				initDisplay
-* Description:		Initialisiert den LED Treiber und stellt die Helligkeit
-* 					des Displays ein.
+/*****************************************************************************
+* Name:			initDisplay
+* Beschreibung:	Initialisiert den LED Treiber HT16K33 und stellt die
+* 				Helligkeit des ein.
 *
-* Subroutines Called:	???
+* Subroutinen:	twi_start() aus twi.h
+* 				twi_write() aus twi.h
+* 				twi_stop() aus twi.h
+* 				clearDisplay()
 *
 * Returns:		keine
 *
-* Globals:		???
-**************************************************************************/
+* Globals:		keine
+******************************************************************************/
 void initDisplay(uint8_t brightness) {
 	/* LED Treiber anschalten */
 	twi_start(SLAVE_ADRESS);
@@ -126,6 +144,18 @@ void initDisplay(uint8_t brightness) {
 	twi_stop();
 }
 
+/*****************************************************************************
+* Name:			initTimer
+* Beschreibung:	Initialisiert den Timer1 des ATmegas auf Interrupt bei
+* 				Überlauf des Timers. Anfangswert ist eine Sekunde
+*
+* Subroutinen:	keine
+*
+* Returns:		keine
+*
+* Globals:		Interrupt-Flag
+* 				ui_timerOffset
+******************************************************************************/
 void initTimer() {
 	/* Timer/Counter1 Overflow*/
 
@@ -144,17 +174,21 @@ void initTimer() {
 	TIMER1_CPU_DIV_1024();
 }
 
-/**************************************************************************
-* NAME:			Timer Interrupt Service Routine
-* Description:		Der Timer zählt eine gewisse Zeit X hoch. Wenn der Interrupt ??? auftritt wird
-* 			diese Funktion aufgerufen, die die neue Position von dem Spielball berechnet.
+/*****************************************************************************
+* Name:			ISR(TIMER1_OVF_vect)
+* Beschreibung:	Läuft der Timer1 über und Globale Interrupts sind erlaubt,
+* 				wird die Timerflag gesetzt und der Timer zurückgesetzt auf
+* 				den Wert vom Timeroffset. Um diesen Timer zu nutzen: Auf das
+* 				Timerflag prüfen und danach auf 0 setzen. Die Länge des TImers
+* 				kann über den Timeroffset bestimmt werden.
 *
-* Subroutines Called:	kein
+* Subroutinen:	keine
 *
 * Returns:		keine
 *
-* Globals:		int8_t ui_timerFlag;
-**************************************************************************/
+* Globals:		ui_timerFlag
+* 				ui_timerOffset
+******************************************************************************/
 ISR(TIMER1_OVF_vect) {
 	/* Disable Interrupts */
 	cli();
@@ -163,20 +197,34 @@ ISR(TIMER1_OVF_vect) {
 	sei();
 }
 
+/*****************************************************************************
+* Name:			ISR(_vector_default)
+* Beschreibung:	Interupt Service Routine für nicht bestimmte Interrupts.
+* 				Hat nur die Funktion nicht gewollte Interrupts abzufangen.
+*
+* Subroutinen:	keine
+*
+* Returns:		keine
+*
+* Globals:		keine
+******************************************************************************/
 ISR(__vector_default) {
 
 }
 
-/**************************************************************************
-* NAME:					initSystem
-* Description:			Initialisierung das gesamte System.
+/*****************************************************************************
+* Name:			initSystem
+* Beschreibung:	Initialisiert das gesamte System
 *
-* Subroutines Called:	initATmega(), initTWI
+* Subroutinen:	initATmega()
+*				initTWI()
+*				initDisplay()
+*				initTimer()
 *
 * Returns:		keine
 *
-* Globals:		???
-**************************************************************************/
+* Globals:		keine
+******************************************************************************/
 void initSystem() {
 	initATmega();
 	initTWI();
@@ -185,19 +233,21 @@ void initSystem() {
 	initTimer();
 }
 
-/**************************************************************************
-* NAME:			printBit
-* Description:		Ändert ein bestimmtes Bit in der LED Matrix.
+/*****************************************************************************
+* Name:			printBit
+* Beschreibung:	Ändert ein bestimmtes Bit in der LED Matrix.
 * 				Adressierung:
 * 					Zeilen: 	0 bis 7
 * 					Spalten: 	0 bis 15
 *
-* Subroutines Called:	twi_start(), twi_write(), twi_stop()
+* Subroutinen:	twi_start() aus twi.h
+* 				twi_write() aus twi.h
+* 				twi_stop() aus twi.h
 *
 * Returns:		keine
 *
-* Globals:		matrix[8]
-**************************************************************************/
+* Globals:		matrix
+******************************************************************************/
 void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 	cli();
 	uint8_t highByte = 0;
@@ -233,17 +283,19 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 
 }
 
-
- /**************************************************************************
-* NAME:			printArray
-* Description:		Gibt ein ganzes Array vom Format 8 Zeilen x 2 Spalten x 8 Bit auf den LEDs aus.
+/*****************************************************************************
+* Name:			printArray
+* Beschreibung:	Gibt ein ganzes Array vom Format 8 Zeilen x 16 Bit pro Zeile
+* 				auf dem Display aus.
 *
-* Subroutines Called:	TWI_sendArray();
+* Subroutinen:	twi_start() aus twi.h
+* 				twi_write() aus twi.h
+* 				twi_stop() aus twi.h
 *
 * Returns:		keine
 *
-* Globals:		matrix[8][2]
-**************************************************************************/
+* Globals:		matrix
+******************************************************************************/
 void printArray(uint16_t ui_matrix[8]) {
 	cli();
 	uint16_t bitSwappedByte[8];
@@ -268,16 +320,21 @@ void printArray(uint16_t ui_matrix[8]) {
 	sei();
 }
 
-/**************************************************************************
-* NAME:			printVerticalArray
-* Description:		Gibt ein ganzes Array vom Format 8 Zeilen x 2 Spalten x 8 Bit auf den LEDs aus.
+/*****************************************************************************
+* Name:			printVerticalArray
+* Beschreibung:	Gibt ein ganzes Array vom Format 16 Spalten x 8 Bit pro Zeile
+* 				auf dem Display aus. Diese Funktion wandelt das Array erst um
+* 				und nutzt dann die printArray Funktion.
 *
-* Subroutines Called:	TWI_sendArray();
+* Subroutinen:	twi_start() aus twi.h
+* 				twi_write() aus twi.h
+* 				twi_stop() aus twi.h
+* 				printArray()
 *
 * Returns:		keine
 *
-* Globals:		matrix[8][2]
-**************************************************************************/
+* Globals:		keine
+******************************************************************************/
 void printVerticalArray(uint8_t board[16]) {
 	uint16_t newBoard[8] = {0};
 	for (uint8_t k = 0; k < 8; k++)
@@ -290,21 +347,32 @@ void printVerticalArray(uint8_t board[16]) {
 	printArray(newBoard);
 }
 
- /**************************************************************************
-* NAME:			ui_getBit
-* Description:		Diese Funktion gibt den Werte des Bits an der gefragten Stelle in der matrix wieder.
+/*****************************************************************************
+* Name:			ui_getBit
+* Beschreibung:	Diese Funktion gibt den Werte des Bits an der gefragten Stelle
+* 				in der Matrix wieder.
 *
-* Subroutines Called:	keine
+* Subroutinen: 	keine
 *
-* Returns:		uint8_t - Bit der stelle [row][column]
+* Returns:		uint8_t: 1 oder 0
 *
-* Globals:		matrix[8][2]
-**************************************************************************/
+* Globals:		keine
+******************************************************************************/
 uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column) {
 	return (uint8_t)((matrix[ui_row] >> (15 - ui_column) ) & 1);
 }
 
-// Diese Funktionen geben die Zahl = 1, wenn der Taster gedr�ckt ist - =0 wenn der Taster nicht gedr�ckt ist
+/*****************************************************************************
+* Name:			b_playerX_Y
+* Beschreibung:	Diese Funktionen geben zurück, ob ein bestimmter Spieler eine
+* 				bestimmte Taste in der übergebenen Variable gedrückt hat.
+*
+* Subroutinen: 	keine
+*
+* Returns:		uint8_t: 1 wenn gedrückt oder 0 wenn nicht gedrückt
+*
+* Globals:		keine
+******************************************************************************/
 uint8_t b_player1_L(uint8_t _ui_buttons) {return ((_ui_buttons & BIT7) >> 7);}
 uint8_t b_player1_R(uint8_t _ui_buttons) {return ((_ui_buttons & BIT6) >> 6);}
 uint8_t b_player1_U(uint8_t _ui_buttons) {return ((_ui_buttons & BIT5) >> 5);}
@@ -314,6 +382,17 @@ uint8_t b_player2_R(uint8_t _ui_buttons) {return ((_ui_buttons & BIT2) >> 2);}
 uint8_t b_player2_U(uint8_t _ui_buttons) {return ((_ui_buttons & BIT1) >> 1);}
 uint8_t b_player2_D(uint8_t _ui_buttons) {return (_ui_buttons & BIT0);}
 
+/*****************************************************************************
+* Name:			resetplayerX_Y
+* Beschreibung:	Diese Funktionen setzt das jeweilige Bit für die gedrückte
+* 				Taste in der übergebenen Variable zurück.
+*
+* Subroutinen: 	keine
+*
+* Returns:		keine
+*
+* Globals:		keine
+******************************************************************************/
 void resetPlayer1_L(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT7);}
 void resetPlayer1_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT6);}
 void resetPlayer1_U(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT5);}
@@ -323,19 +402,30 @@ void resetPlayer2_R(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT2);}
 void resetPlayer2_U(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT1);}
 void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 
-
-
-
-/**************************************************************************
-* NAME:			ui_input
-* Description:		Auslesen der  Eingabetasten (PortB und  PortF).
-*                     	Man geht davon aus, dass die Tasten AKTIVE LOW sind.
-*                     	Es wurden Funktionen definiert, um direkt die Richtungen abzufragen
+/*****************************************************************************
+* Name:			ui_input
+* Beschreibung:	Auslesen der  Eingabetasten (PortB und  PortF).
+*               Man geht davon aus, dass die Tasten AKTIVE LOW sind.
+*               Es wurden Funktionen definiert, um direkt die Richtungen
+*               abzufragen.
+*               Vergabe der  Pins:
+*        			Spieler 1:  Richtung - Port - Pin (Anschluss)
+*                    		Left     - PF4  - A3
+*                    		Right    - PF5  - A2
+*                    		Up       - PF6  - A1
+*                    		Down     - PF7  - A0
+*                    		(A6 bis A9 sind als analoge Eing�nge verf�gbar)
+*        			Spieler 2:
+*                   		Left     - PB1  - 15
+*                    		Right    - PB3  - 14
+*                    		Up       - PB2  - 16
+*                    		Down     - PB6  - 10
+*    			Die Pins liegen alle in dieser Reihenfolge untereinander
 *
-* Subroutines Called:	keine
+* Subroutinen: 	keine
 *
-* Returns:		uint8_t ui_buttons;
-*                      	Bit 0-3 -> player 1
+* Returns:		uint8_t: ui_buttons;
+*                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
 *                         	Bit 1/5 -> Right
@@ -343,22 +433,7 @@ void resetPlayer2_D(uint8_t *_ui_buttons) {(*_ui_buttons &= ~BIT0);}
 *                         	Bit 3/7 -> Down
 *
 * Globals:		keine
-*
-* NOTES:	
-* 	Vergabe der  Pins:
-*        Spieler 1:  Richtung - Port - Pin (Anschluss)
-*                    Left     - PF4  - A3
-*                    Right    - PF5  - A2
-*                    Up       - PF6  - A1
-*                    Down     - PF7  - A0
-*                    (A6 bis A9 sind als analoge Eing�nge verf�gbar)
-*        Spieler 2:
-*                    Left     - PB1  - 15
-*                    Right    - PB3  - 14
-*                    Up       - PB2  - 16
-*                    Down     - PB6  - 10
-*    	Die Pins liegen alle in dieser Reihenfolge untereinander
-**************************************************************************/
+******************************************************************************/
 uint8_t ui_input(){
     uint8_t ui_bufferPF = 0x00, ui_bufferPB = 0x00, ui_buttons = 0x00;
     ui_bufferPF = ~PINF;
@@ -377,19 +452,31 @@ uint8_t ui_input(){
 	return ui_buttons;
 }
 
-
- /**************************************************************************
-* NAME:			ui_eingabe
-* Description:		Die Funktionen fragen beim Aufruf die zugehörigen Pins ab.
-* 			Sie geben eine 0x01 zurück, falls die Taste gedrückt ist. ansonten = 0x00
-* 			Es findet bisher kein Entprellen statt.
-* 			Auslesen der  Eingabetasten (PortB und  PortF).
-*                     	Man geht davon aus, dass die Tasten AKTIVE LOW sind.
+/*****************************************************************************
+* Name:			ui_playerX_Y
+* Beschreibung:	Die Funktionen fragen beim Aufruf die zugehörigen Pins ab.
+* 				Sie geben eine 0x01 zurück, falls die Taste gedrückt ist.
+* 				ansonten = 0x00. Es findet bisher kein Entprellen statt.
+* 				Auslesen der  Eingabetasten (PortB und  PortF).
+*           	Man geht davon aus, dass die Tasten AKTIVE LOW sind.
+*               Vergabe der  Pins:
+*        			Spieler 1:  Richtung - Port - Pin (Anschluss)
+*                    		Left     - PF4  - A3
+*                    		Right    - PF5  - A2
+*                    		Up       - PF6  - A1
+*                    		Down     - PF7  - A0
+*                    		(A6 bis A9 sind als analoge Eing�nge verf�gbar)
+*        			Spieler 2:
+*                   		Left     - PB1  - 15
+*                    		Right    - PB3  - 14
+*                    		Up       - PB2  - 16
+*                    		Down     - PB6  - 10
+*    			Die Pins liegen alle in dieser Reihenfolge untereinander
 *
-* Subroutines Called:	keine
+* Subroutinen: 	keine
 *
-* Returns:		uint8_t ui_buttons;
-*                      	Bit 0-3 -> player 1
+* Returns:		uint8_t: ui_buttons;
+*                      		Bit 0-3 -> player 1
 *                     		Bit 4-7 -> player 2
 *                         	Bit 0/4 -> Left
 *                         	Bit 1/5 -> Right
@@ -397,22 +484,7 @@ uint8_t ui_input(){
 *                         	Bit 3/7 -> Down
 *
 * Globals:		keine
-*
-* NOTES:	
-* 	Vergabe der  Pins:
-*        Spieler 1:  Richtung - Port - Pin (Anschluss)
-*                    Left     - PF4  - A3
-*                    Right    - PF5  - A2
-*                    Up       - PF6  - A1
-*                    Down     - PF7  - A0
-*                    (A6 bis A9 sind als analoge Eing�nge verf�gbar)
-*        Spieler 2:
-*                    Left     - PB1  - 15
-*                    Right    - PB3  - 14
-*                    Up       - PB2  - 16
-*                    Down     - PB6  - 10
-*    	Die Pins liegen alle in dieser Reihenfolge untereinander
-**************************************************************************/
+******************************************************************************/
 uint8_t ui_player1_L() {
     	uint8_t ui_bufferPF = 0x00;
     	ui_bufferPF = ~PINF;

@@ -1,6 +1,7 @@
 /*****************************************************************************
 *
-* Datei: 		AdaVRuit.c
+* Datei: 		AdaVRuit.h
+* Kurs:			TEN14
 * Projekt:		Spielekonsole
 * Modul:		Zentrale Einheit
 *

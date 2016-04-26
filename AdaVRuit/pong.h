@@ -1,30 +1,31 @@
- /*****************************************************************************
+/*****************************************************************************
 *
-* FILE: 		      pong.h
-* PROJECT:	      Spielekonsole
-* MODULE:		      ???
+* Datei: 		pong.h
+* Projekt:		Spielekonsole
+* Modul:		Spiel Pong
 *
-* Description:		Header zu pong.c
+* Beschreibung:		Diese Datei enthällt die Hauptroutine und alle Funktionen des Speiels "Pong"
 *
-* Notes:		-
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
 *
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date:   11.02.2016
-* BY:	    Michel, Marco, Michael, Christian, Tobias
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 
 #ifndef PONG_H_
 #define PONG_H_
 
+/***************
+ * INCLUDES
+ ***************/
 #include "main.h"
-
 #include <avr/interrupt.h>
 #include <avr/delay.h>
 
-/* Konstanten */
+/*******************
+ * DEFINES
+ *******************/
 #ifndef ROWS
 #warning "ROWS is not defined. Default = 8"
 #define ROWS 		8	// Anzahl der Zeilen des Spielfelds in Pixeln
@@ -48,7 +49,27 @@
 
 #define MAX_SCORE	3
 
-/* Funktionen */
+/**************************
+ * EXTERNE VARIABLEN
+ **************************/
+
+/*****************************************************************************
+* Name:			playPong
+* Beschreibung:		Hauptroutine des Spiels Pong
+*
+* Subroutinen:		_delay_ms() aus <util/delay.h>	
+* 			initPong()
+* 			ui_input() aus AdaVRuit.h
+* 			processInput()
+* 			calcBallPosition()
+* 			printPong()
+* 			sei() aus <avr/io.h>
+*
+* Rückgabewert:		keine
+*
+* Globale Var.:		int8_t ui_timerFlag:  aus AdaVRuit.h
+* 
+******************************************************************************/
 void playPong();
 
 

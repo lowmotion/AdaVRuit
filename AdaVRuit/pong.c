@@ -57,9 +57,9 @@ struct Player playerL, playerR;
 *			printCharacters() aus AdaVRuit_Font.h
 *			_delay_ms() aus <util/delay.h>	
 *
-* Returns:		uint8_t: 1 oder 0
+* Rückgabewert:		uint8_t: 1 oder 0
 *
-* Globals:		struct Ball ball;
+* Globale Var.:		struct Ball ball;
 *			struct Player playerL, playerR;
 * 			uint8_t ui_timerOffset, ui_timerFlag  aus AdaVRuit.h
 ******************************************************************************/
@@ -137,9 +137,9 @@ uint8_t Goal(uint8_t player){
 *
 * Subroutinen:		Goal();
 *
-* Returns:		uint8_t: 1 oder 0
+* Rückgabewert:		uint8_t: 1 oder 0
 *
-* Globals:		struct Ball ball;
+* Globale Var.:		struct Ball ball;
 *			struct Player playerL, playerR;
 ******************************************************************************/
 uint8_t calcBallPosition() {
@@ -221,9 +221,9 @@ uint8_t calcBallPosition() {
 * 			b_player2_U() aus AdaVRuit.h
 * 			b_player2_D() aus AdaVRuit.h
 *
-* Returns:		uint8_t: 1 oder 0
+* Rückgabewert:		uint8_t: 1 oder 0
 *
-* Globals:		struct Player playerL, playerR;
+* Globale Var.:		struct Player playerL, playerR;
 ******************************************************************************/
 
 uint8_t processInput(uint8_t ui_buttons){
@@ -275,9 +275,9 @@ uint8_t processInput(uint8_t ui_buttons){
 *
 * Subroutinen:		cprintBit(); aus AdaVRuit.h
 *
-* Returns:		keine
+* Rückgabewert:		keine
 *
-* Globals:		struct Ball ball;
+* Globale Var.:		struct Ball ball;
 *			struct Player playerL, playerR;
 ******************************************************************************/
 void printPong(){
@@ -365,9 +365,9 @@ void printPong(){
 * Subroutinen:		clearDisplay()
 *			printPong() aus AdaVRuit.h
 *
-* Returns:		keine
+* Rückgabewert:		keine
 *
-* Globals:		SREG: aus <avr/io.h>
+* Globale Var.:		SREG: aus <avr/io.h>
 * 			struct Ball ball
 *			struct Player playerL, playerR
 * 			uint8_t ui_timerOffset:  aus AdaVRuit.h
@@ -417,10 +417,11 @@ void initPong() {
 * 			processInput()
 * 			calcBallPosition()
 * 			printPong()
+* 			sei() aus <avr/io.h>
 *
-* Returns:		keine
+* Rückgabewert:		keine
 *
-* Globals:		int8_t ui_timerFlag:  aus AdaVRuit.h
+* Globale Var.:		int8_t ui_timerFlag:  aus AdaVRuit.h
 * 
 ******************************************************************************/
 void playPong() {

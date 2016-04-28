@@ -1,10 +1,12 @@
 /*****************************************************************************
 *
 * Datei: 		pong.h
+* Kurs:			TEN14
 * Projekt:		Spielekonsole
 * Modul:		Spiel Pong
 *
-* Beschreibung:		Diese Datei enthällt die Hauptroutine und alle Funktionen des Speiels "Pong"
+* Beschreibung:	Diese Datei enthällt die Hauptroutine und alle Funktionen des
+* 				Spiels "Pong"
 *
 * Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
 * 				Tobias Mages
@@ -49,21 +51,17 @@
 
 #define MAX_SCORE	3
 
-/**************************
- * EXTERNE VARIABLEN
- **************************/
-
 /*****************************************************************************
-* Name:			playPong
+* Name:				playPong
 * Beschreibung:		Hauptroutine des Spiels Pong
 *
 * Subroutinen:		_delay_ms() aus <util/delay.h>	
-* 			initPong()
-* 			ui_input() aus AdaVRuit.h
-* 			processInput()
-* 			calcBallPosition()
-* 			printPong()
-* 			sei() aus <avr/io.h>
+* 					initPong()
+* 					ui_input() aus AdaVRuit.h
+* 					processInput()
+* 					calcBallPosition()
+* 					printPong()
+* 					sei() aus <avr/io.h>
 *
 * Rückgabewert:		keine
 *

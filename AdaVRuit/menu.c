@@ -1,60 +1,97 @@
+/*****************************************************************************
+*
+* Datei: 		menu.c
+* Kurs:			TEN14
+* Projekt:		Spielekonsole
+* Modul:		Menü
+*
+* Beschreibung:	Enthält alle für das Menü erforderlichen Funktionen und
+* 				Datenstrukturen
+*
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
+*
+* Datum: 		26.04.2016
+*
+*****************************************************************************/
+
+
 #include "menu.h"
 
-/*
-* Funktion:         twinkelLeftCursor()
-* Beschreibung:     Schaltet die LEDs des linken Cursors aus
-*/
+/*****************************************************************************
+* Name:			twinkel[Left/Right]Cursor
+* Beschreibung:	Schaltet die LEDs des linken/rechten Cursors aus
+*
+* Subroutinen:	printBit
+*
+* Rückgabewert:	kein
+*
+* Globale Var.:	keine
+******************************************************************************/
 void twinkelLeftCursor()
 {
-			printBit(1, 2, LED_OFF);
-		printBit(2, 1, LED_OFF); printBit(2, 2, LED_OFF);
-	printBit(3, 0, LED_OFF);printBit(3, 1, LED_OFF);
-	printBit(4, 0, LED_OFF);printBit(4, 1, LED_OFF);
-		printBit(5, 1, LED_OFF); printBit(5, 2, LED_OFF);
-			printBit(6, 2, LED_OFF);
+	printBit(1, 2, LED_OFF);
+	printBit(2, 1, LED_OFF); printBit(2, 2, LED_OFF);
+	printBit(3, 0, LED_OFF); printBit(3, 1, LED_OFF);
+	printBit(4, 0, LED_OFF); printBit(4, 1, LED_OFF);
+	printBit(5, 1, LED_OFF); printBit(5, 2, LED_OFF);
+	printBit(6, 2, LED_OFF);
 }
 
-/*
-* Funktion:         twinkelRightCursor()
-* Beschreibung:     Schaltet die LEDs des rechten Cursors aus
-*/
 void twinkelRightCursor()
 {
 	printBit(1, 13, LED_OFF);
-		printBit(2, 13, LED_OFF); printBit(2, 14, LED_OFF);
-			printBit(3, 14, LED_OFF); printBit(3, 15, LED_OFF);
-			printBit(4, 14, LED_OFF); printBit(4, 15, LED_OFF);
-		printBit(5, 13, LED_OFF); printBit(5, 14, LED_OFF);
+	printBit(2, 13, LED_OFF); printBit(2, 14, LED_OFF);
+	printBit(3, 14, LED_OFF); printBit(3, 15, LED_OFF);
+	printBit(4, 14, LED_OFF); printBit(4, 15, LED_OFF);
+	printBit(5, 13, LED_OFF); printBit(5, 14, LED_OFF);
 	printBit(6, 13, LED_OFF);
 }
 
-/*
-* Funktion:         menu()
-* Beschreibung:     Gibt ein Men� aus. Mit den "left"- und "right"-Tastern von Player 1 l�sst sich durch verschiedene
-					Men�punkte bl�ttern. Die Men�punkte sind animiert und stellen das zu erwartende Spiel dar.
-					Durch Dr�cken des "up"-Tasters von Player 1 wird der aktuelle Men�punkt gestartet.
-*/
 
+/*****************************************************************************
+* Name:			menu
+* Beschreibung:	Gibt ein Menü aus. Mit den "left"- und "right"-Tastern von
+* 				Player 1 lässt sich durch verschiedene Menüpunkte blättern.
+* 				Die Menüpunkte sind animiert und stellen das zu erwartende
+* 				Spiel dar. Durch Drücken des "up"-Tasters von Player 1 wird
+* 				der aktuelle Menüpunkt gestartet.
+*
+* Subroutinen:	printArray aus AdaVRuit.h
+*				ui_player1_L aus AdaVRuit.h
+*				ui_player1_R aus AdaVRuit.h
+*				ui_player1_U aus AdaVRuit.h
+*				playPong aus pong.h
+*				playTetris aus tetris.h
+*				playSnake aus snake.h
+*				twinkelLeftCursor
+*				twinkelRightCursor
+*				clearDisplay aus AdaVRuit.h
+*
+* Rückgabewert:	kein
+*
+* Globale Var.:	keine
+******************************************************************************/
 void menu()
 {
 	//Initialisierung aller Variablen
 
-	uint8_t currentSelection = 1, counter = 0;
+	uint8_t ui_currentSelection = 1, ui_counter = 0;
 
-	uint8_t maxAnimationSteps[MENU_ENTRIES] = { 6, 14, 11 };
+	uint8_t ui_maxAnimationSteps[MENU_ENTRIES] = { 6, 14, 11 };
 
 	struct animationData
 	{
-		uint16_t matrix[8];
+		uint16_t ui_matrix[8];
 	};
 
-	
+
 	/*/
 	//Die struct-Arrays enthalten jeweils alle Einzelbilder der Animation,
 	//eine Zeile entspricht einem Bild.
 	/*/
 
-	struct animationData pong[6] =
+	struct animationData s_pong[6] =
 	{
 		{
 			0b0000000000000000,
@@ -65,7 +102,7 @@ void menu()
 			0b0110000000100110,
 			0b0010000000000100,
 			0b0000000000000000
-			
+
 		},
 		{
 			0b0000000000000000,
@@ -123,7 +160,7 @@ void menu()
 		}
 	};
 
-	struct animationData snake[14] =
+	struct animationData s_snake[14] =
 	{
 		{
 			0b0000000000000000,
@@ -267,7 +304,7 @@ void menu()
 		}
 	};
 
-	struct animationData tetris[11] =
+	struct animationData s_tetris[11] =
 	{
 		{
 			0b0000000010000000,
@@ -381,50 +418,51 @@ void menu()
 		}
 	};
 
-	clearDisplay();      //Bildschirm komplett l�schen
+	clearDisplay();      //Bildschirm komplett l?schen
 
 	while (1)
 	{
-		switch (currentSelection)
+		switch (ui_currentSelection)
 		{
 		case 1:
-			printArray(pong[counter].matrix);
+			printArray(s_pong[ui_counter].ui_matrix);
 			if (ui_player1_U()) playPong();
 			break;
 		case 2:
-			printArray(snake[counter].matrix);
+			printArray(s_snake[ui_counter].ui_matrix);
 			if (ui_player1_U()) playSnake();
 			break;
 		case 3:
-			printArray(tetris[counter].matrix);
+			printArray(s_tetris[ui_counter].ui_matrix);
 			if (ui_player1_U()) playTetris();
 			break;
 		default:
-			clearDisplay();      //TODO: sinnvollen default-Wert �berlegen
+			clearDisplay();      //TODO: sinnvollen default-Wert ?berlegen
 			break;
 		}
 
 		/*/
-		// Abfrage ob links- oder rechts-Taste gedr�ckt wurde und
-		// entsprechend der aktuell angezeigt Men�punkt gewechselt werden muss
+		// Abfrage ob links- oder rechts-Taste gedr?ckt wurde und
+		// entsprechend der aktuell angezeigt Men?punkt gewechselt werden muss
 		/*/
 		if (ui_player1_L() == 1)
 		{
-			currentSelection--;
+			ui_currentSelection--;
 			twinkelLeftCursor();
-			if (currentSelection == 0) currentSelection = MENU_ENTRIES;
+			if (ui_currentSelection == 0) ui_currentSelection = MENU_ENTRIES;
 		}
 		if (ui_player1_R() == 1)
 		{
-			currentSelection++;
+			ui_currentSelection++;
 			twinkelRightCursor();
-			if (currentSelection > MENU_ENTRIES) currentSelection = 1;
+			if (ui_currentSelection > MENU_ENTRIES) ui_currentSelection = 1;
 		}
 
-		counter++;              //Counter wird erh�ht um das n�chste Bild der Animation auszuw�hlen
-		if (counter >= maxAnimationSteps[currentSelection - 1]) counter = 0;
+		ui_counter++;              //Counter wird erh?ht um das n?chste Bild der Animation auszuw?hlen
+		if (ui_counter >= ui_maxAnimationSteps[ui_currentSelection - 1]) ui_counter = 0;
 
 		_delay_ms(300);
 	}
 }
+
 

@@ -156,7 +156,7 @@ void makeFood(uint8_t playInit)
 uint8_t ui_checkButtons(uint8_t ui_buttons)
 {
 	/* Abbruchbedingung */
-	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
+	if(b_checkPlayer1_U(ui_buttons) && b_checkPlayer1_D(ui_buttons) && b_checkPlayer1_L(ui_buttons) && b_checkPlayer1_R(ui_buttons)) {
 		return 0;
 	}
 	if(!ui_buttonRead)	//Buttoneingabe bereits geschehen?

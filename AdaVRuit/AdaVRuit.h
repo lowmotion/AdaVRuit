@@ -220,7 +220,7 @@ uint8_t ui_getBit(uint8_t ui_row, uint8_t ui_column);
 uint8_t ui_input();
 
 /*****************************************************************************
-* Name:			ui_playerX_Y
+* Name:			b_getPlayerX_Y
 * Beschreibung:	Die Funktionen fragen beim Aufruf die zugehörigen Pins ab.
 * 				Sie geben eine 0x01 zurück, falls die Taste gedrückt ist.
 * 				ansonten = 0x00. Es findet bisher kein Entprellen statt.
@@ -242,27 +242,24 @@ uint8_t ui_input();
 *
 * Subroutinen: 	keine
 *
-* Rückgabewert:	uint8_t: ui_buttons;
-*                      		Bit 0-3 -> player 1
-*                     		Bit 4-7 -> player 2
-*                         	Bit 0/4 -> Left
-*                         	Bit 1/5 -> Right
-*                         	Bit 2/6 -> Up
-*                         	Bit 3/7 -> Down
+* Rückgabewert:	uint8_t:
+* 				0 = Taste nicht gedrückt
+* 				1 = Taste gedrückt
+*
 *
 * Globale Var.:	keine
 ******************************************************************************/
-uint8_t ui_player1_L();
-uint8_t ui_player1_R();
-uint8_t ui_player1_U();
-uint8_t ui_player1_D();
-uint8_t ui_player2_L();
-uint8_t ui_player2_R();
-uint8_t ui_player2_U();
-uint8_t ui_player2_D();
+uint8_t b_getPlayer1_L();
+uint8_t b_getPlayer1_R();
+uint8_t b_getPlayer1_U();
+uint8_t b_getPlayer1_D();
+uint8_t b_getPlayer2_L();
+uint8_t b_getPlayer2_R();
+uint8_t b_getPlayer2_U();
+uint8_t b_getPlayer2_D();
 
 /*****************************************************************************
-* Name:			b_playerX_Y
+* Name:			b_checkPlayerX_Y
 * Beschreibung:	Diese Funktionen geben zurück, ob ein bestimmter Spieler eine
 * 				bestimmte Taste in der übergebenen Variable gedrückt hat.
 *
@@ -272,14 +269,14 @@ uint8_t ui_player2_D();
 *
 * Globale Var.:	keine
 ******************************************************************************/
-uint8_t b_player1_L(uint8_t _ui_buttons);
-uint8_t b_player1_R(uint8_t _ui_buttons);
-uint8_t b_player1_U(uint8_t _ui_buttons);
-uint8_t b_player1_D(uint8_t _ui_buttons);
-uint8_t b_player2_L(uint8_t _ui_buttons);
-uint8_t b_player2_R(uint8_t _ui_buttons);
-uint8_t b_player2_U(uint8_t _ui_buttons);
-uint8_t b_player2_D(uint8_t _ui_buttons);
+uint8_t b_checkPlayer1_L(uint8_t _ui_buttons);
+uint8_t b_checkPlayer1_R(uint8_t _ui_buttons);
+uint8_t b_checkPlayer1_U(uint8_t _ui_buttons);
+uint8_t b_checkPlayer1_D(uint8_t _ui_buttons);
+uint8_t b_checkPlayer2_L(uint8_t _ui_buttons);
+uint8_t b_checkPlayer2_R(uint8_t _ui_buttons);
+uint8_t b_checkPlayer2_U(uint8_t _ui_buttons);
+uint8_t b_checkPlayer2_D(uint8_t _ui_buttons);
 
 /*****************************************************************************
 * Name:			resetplayerX_Y

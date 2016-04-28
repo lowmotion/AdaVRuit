@@ -740,11 +740,11 @@ void playTetris()
 	while (ui_cancel == 0)
 	{
 		//Abbruchbedingungen: entweder alle vier Tasten von Player 1 gedr�ckt und/oder die oberste Reihe des Bildschirms ist blockiert
-		if (ui_player1_U() && ui_player1_L() && ui_player1_R() && ui_player1_D()) ui_cancel = 1;
+		if (b_getPlayer1_U() && b_getPlayer1_L() && b_getPlayer1_R() && b_getPlayer1_D()) ui_cancel = 1;
 		if (ui_board[15] != 0) ui_cancel = 1;
 
 		//Erzeugung einer Zufallszahl durch Messung der 
-		if (ui_player1_U() || ui_player1_L() || ui_player1_R() || ui_player1_D()) ui_rand++;
+		if (b_getPlayer1_U() || b_getPlayer1_L() || b_getPlayer1_R() || b_getPlayer1_D()) ui_rand++;
 
 
 		output(s_obj, ui_board);
@@ -756,9 +756,9 @@ void playTetris()
 			ui_counter++;
 
 			//Auswertung der Tasteneingaben
-			if (ui_player1_L()) s_obj = s_moveLeft(s_obj, ui_board);
-			if (ui_player1_R()) s_obj = s_moveRight(s_obj, ui_board);
-			if (ui_player1_U()) s_obj = s_rotate(s_obj, ui_board);
+			if (b_getPlayer1_L()) s_obj = s_moveLeft(s_obj, ui_board);
+			if (b_getPlayer1_R()) s_obj = s_moveRight(s_obj, ui_board);
+			if (b_getPlayer1_U()) s_obj = s_rotate(s_obj, ui_board);
 
 			if (ui_counter > GAME_SPEED)
 			{

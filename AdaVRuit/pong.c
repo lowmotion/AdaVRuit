@@ -233,19 +233,19 @@ uint8_t ui_calcBallPosition() {
 
 uint8_t ui_processInput(uint8_t ui_buttons){
 	/* Abbruchbedingung */
-	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
+	if(b_checkPlayer1_U(ui_buttons) && b_checkPlayer1_D(ui_buttons) && b_checkPlayer1_L(ui_buttons) && b_checkPlayer1_R(ui_buttons)) {
 		return 0;
 	}
 
     // Bewegung des linken Schl�gers
-    if(b_player1_U(ui_buttons) == 1){                         // Bewegung nach oben
+    if(b_checkPlayer1_U(ui_buttons) == 1){                         // Bewegung nach oben
         s_playerL.bot = 0;
     	s_playerL.prevY = s_playerL.posY;
         if(s_playerL.posY > 0) {
 			s_playerL.posY -= 1;
 		}
     }
-    if(b_player1_D(ui_buttons) == 1){                         // Bewegung nach unten
+    if(b_checkPlayer1_D(ui_buttons) == 1){                         // Bewegung nach unten
     	s_playerL.bot = 0;
     	s_playerL.prevY = s_playerL.posY;
         if(playerL.posY < (ROWS-1)) {
@@ -254,14 +254,14 @@ uint8_t ui_processInput(uint8_t ui_buttons){
     }
 
     // Bewegung des rechten Schl�gers
-    if(b_player2_U(ui_buttons) == 1){                         // Bewegung nach oben
+    if(b_checkPlayer2_U(ui_buttons) == 1){                         // Bewegung nach oben
     	s_playerR.bot = 0;
     	s_playerR.prevY = s_playerR.posY;
         if(s_playerR.posY > 0) {
         	s_playerR.posY -= 1;
         }
     }
-    if(b_player2_D(ui_buttons) == 1){                         // Bewegung nach unten
+    if(b_checkPlayer2_D(ui_buttons) == 1){                         // Bewegung nach unten
     	s_playerR.bot = 0;
     	playerR.prevY = playerR.posY;
         if(playerR.posY < (ROWS-1)) {

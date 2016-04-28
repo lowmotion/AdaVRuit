@@ -426,15 +426,15 @@ void menu()
 		{
 		case 1:
 			printArray(s_pong[ui_counter].ui_matrix);
-			if (ui_player1_U()) playPong();
+			if (b_getPlayer1_U()) playPong();
 			break;
 		case 2:
 			printArray(s_snake[ui_counter].ui_matrix);
-			if (ui_player1_U()) playSnake();
+			if (b_getPlayer1_U()) playSnake();
 			break;
 		case 3:
 			printArray(s_tetris[ui_counter].ui_matrix);
-			if (ui_player1_U()) playTetris();
+			if (b_getPlayer1_U()) playTetris();
 			break;
 		default:
 			clearDisplay();      //TODO: sinnvollen default-Wert ?berlegen
@@ -445,13 +445,13 @@ void menu()
 		// Abfrage ob links- oder rechts-Taste gedr?ckt wurde und
 		// entsprechend der aktuell angezeigt Men?punkt gewechselt werden muss
 		/*/
-		if (ui_player1_L() == 1)
+		if (b_getPlayer1_L() == 1)
 		{
 			ui_currentSelection--;
 			twinkelLeftCursor();
 			if (ui_currentSelection == 0) ui_currentSelection = MENU_ENTRIES;
 		}
-		if (ui_player1_R() == 1)
+		if (b_getPlayer1_R() == 1)
 		{
 			ui_currentSelection++;
 			twinkelRightCursor();

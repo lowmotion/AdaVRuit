@@ -1,22 +1,51 @@
-
+/*****************************************************************************
+*
+* Datei: 		AdaVRuit_Font.c
+* Kurs:			TEN14
+* Projekt:		Spielekonsole
+* Modul:		Zentrale Einheit
+*
+* Beschreibung:	Dieses Zusatzmodul ermöglicht es ASCII-Zeichen auf dem Display
+* 				darzustellen. Hierbei hat jedes Zeichen eine Breite von vier
+* 				Spalten zur Verfügung. Somit können gleichzeitig drei Zeichen
+* 				auf dem 16x8 Display dargestellt werden.
+*
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
+*
+* Datum: 		26.04.2016
+*
+*****************************************************************************/
 #include "AdaVRuit_Font.h"
 
 
-struct ascii
+/*****************************************************************************
+ * Name:			character
+ * Beschreibung:	Dieses Struktur stellt das Format eines jeden ASCII Zeichens
+ * 					dar. Es beinhaltet den ASCII-Code des Zeichens in Dezimal
+ * 					und eine grafische Darstellung in 4x8 Bit.
+ *****************************************************************************/
+struct character
 {
 	uint8_t matrix[4];		//Matrix welche das ASCII-Zeichen enth�lt
 	uint8_t dez;			//Dezimalwert des in .matrix[4] enthaltenen ASCII-Zeichens
 };
 
-/*
-* Funktion:			ascii()
-* Beschreibung:		Gibt das als Dezeimalwert per Parameter �bergebene ASCII-Zeichen zur�ck.
-					R�ckgabetyp ist ein "struct ascii".
-*/
-
-struct ascii ascii(uint8_t dez)
+/*****************************************************************************
+* Name:			getCharacter
+* Beschreibung:	Ordnet der Dezimalzahl vom Parameter ein entsprechendes
+* 				ASCII-Zeichen zu und gibt dieses in vor eines oben definierten
+* 				characters zurück.
+*
+* Subroutinen:	keine
+*
+* Rückgabewert:	struct character: Enthält das ASCII-Zeichen als 4x8 Matrix
+*
+* Globale Var.:	keine
+******************************************************************************/
+struct character s_getCharacter(uint8_t dez)
 {
-	struct ascii dig;
+	struct character dig;
 	dig.dez = dez;
 	switch (dez)
 	{
@@ -142,20 +171,26 @@ struct ascii ascii(uint8_t dez)
 	return dig;
 }
 
-/*
-* Funktion:			printAscii()
-* Beschreibung:		Gibt drei ASCII-Zeichen auf dem Bildschirm aus.
-					Als Parameter werden die Dezimalwerte der auszugebenden Zeichen erwartet,
-					bei einer "0" wird ein Leerzeichen ausgegeben.
-*/
-
+/*****************************************************************************
+* Name:			printCharacters
+* Beschreibung:	Gibt drei ASCII-Zeichen auf dem Bildschirm aus.
+*				Als Parameter werden die Dezimalwerte der auszugebenden
+*				Zeichen erwartet, bei einer "0" wird ein Leerzeichen ausgegeben.
+*
+* Subroutinen:	s_getCharacter()
+* 				printVerticalArray() aus AdaVRuit.h
+*
+* Rückgabewert:	keine
+*
+* Globale Var.:	keine
+******************************************************************************/
 void printCharacters(char dez1, char dez2, char dez3)
 {
 	uint8_t board[16] = {};
 
-	for (int i = 0; i < 4; i++) board[i + 1] = ascii(dez1).matrix[i];
-	for (int i = 0; i < 4; i++) board[i + 6] = ascii(dez2).matrix[i];
-	for (int i = 0; i < 4; i++) board[i + 11] = ascii(dez3).matrix[i];
+	for (int i = 0; i < 4; i++) board[i + 1] = s_getCharacter(dez1).matrix[i];
+	for (int i = 0; i < 4; i++) board[i + 6] = s_getCharacter(dez2).matrix[i];
+	for (int i = 0; i < 4; i++) board[i + 11] = s_getCharacter(dez3).matrix[i];
 	
 	printVerticalArray(board);
 }

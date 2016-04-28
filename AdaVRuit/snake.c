@@ -8,7 +8,8 @@
 * Beschreibung:	Diese Datei enthällt die Hauptroutine und alle Funktionen des 
 * 				Spiels "Snake" 
 * 
-* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Tobias Mages, Christian Wagner 
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Tobias Mages,
+* 				Christian Wagner
 * 
 * Datum: 		28.04.2016 
 * 
@@ -46,10 +47,10 @@ struct Food		{
 **************************/ 
 
 /*Bewegungsrichtung*/
-uint8_t direction = UP;		
+uint8_t ui_direction = UP;
 
 /*fuer Button-Abfrage*/
-uint8_t buttonRead = FALSE;
+uint8_t ui_buttonRead = FALSE;
 
 /*fuer delay in mainloop*/
 /*unsigned long prevTime = 0;
@@ -66,15 +67,16 @@ unsigned long delayTime = 500;
 * 
 * Globale Var.:	keine
 ******************************************************************************/ 
-uint8_t random(uint8_t max)
+uint8_t ui_random(uint8_t max)
 {
 	return TCNT1L % max;
 }
 
 /***************************************************************************** 
-* Name:			PartOfSnake* 
-* Beschreibung:	Diese Funktion ueberprueft, ob die Kombination ihrer zwei Eingabeparameter
-* 				einem der aktuellen Koordinatenpaare der Snake-Struktur entspricht
+* Name:			partOfSnake*
+* Beschreibung:	Diese Funktion ueberprueft, ob die Kombination ihrer zwei
+* 				Eingabeparameter einem der aktuellen Koordinatenpaare der
+* 				Snake-Struktur entspricht
 * 
 * Subroutinen:	keine 
 * 
@@ -82,7 +84,7 @@ uint8_t random(uint8_t max)
 * 
 * Globale Var.:	struct Snake snake; 
 ******************************************************************************/ 
-uint8_t PartOfSnake(uint8_t x, uint8_t y)
+uint8_t ui_partOfSnake(uint8_t x, uint8_t y)
 {
 	for (int i=0; i<snake.snakeLength; i++)
 	{
@@ -93,9 +95,10 @@ uint8_t PartOfSnake(uint8_t x, uint8_t y)
 
 /***************************************************************************** 
 * Name:			makeFood 
-* Beschreibung:	Diese Funktion erzeugt ein zufaelliges x-y-Koordinatenpaar, gleicht dieses mit   
-*				der Schlange ab und erzeugt bei Uebereinstimmung eine neue Position. Anschließend
-* 				werden die Werte in den Positionsspeicher der Futter-Struktur geschrieben
+* Beschreibung:	Diese Funktion erzeugt ein zufaelliges x-y-Koordinatenpaar,
+* 				gleicht dieses mit der Schlange ab und erzeugt bei
+* 				Übereinstimmung eine neue Position. Anschließend werden die
+* 				Werte in den Positionsspeicher der Futter-Struktur geschrieben
 * 
 * Subroutinen:	printBit() aus AdaVRuit.h 
 *				random()
@@ -111,13 +114,13 @@ void makeFood(uint8_t playInit)
 	/* letztes Futter loeschen */
 	if (playInit == 1)	printBit(food.foodX, food.foodY, LED_OFF);
 	
-	uint8_t x = random(ROWS-1);
-	uint8_t y = random(COLUMNS-1);
+	uint8_t x = ui_random(ROWS-1);
+	uint8_t y = ui_random(COLUMNS-1);
 	/* Schlange bereits an neuer Futterposition? */
-	while(PartOfSnake(x,y))	
+	while(ui_partOfSnake(x,y))
 	{
-		x = random(ROWS-1);
-		y = random(COLUMNS-1);
+		x = ui_random(ROWS-1);
+		y = ui_random(COLUMNS-1);
 	}
 	food.foodX = x;
 	food.foodY = y;
@@ -133,11 +136,13 @@ void makeFood(uint8_t playInit)
 
 /***************************************************************************** 
 * Name:			checkButtons
-* Beschreibung:	Ueberprueft, ob bereits eine Eingabe im aktuellen Spielzyklus registriert wurde. 
+* Beschreibung:	Ueberprueft, ob bereits eine Eingabe im aktuellen Spielzyklus
+* 				registriert wurde.
 * 				Wenn nein:
-* 				Wertet Buttons "links" und "rechts" aus und in- bzw. dekrementiert die Richtungsvariable
-* 				entsprechend um 1, was einer 90 Grad-Drehung entspricht. Setzt anschließend das zu Beginn
-* 				abgefragte Tastenauswertungsflag
+* 				Wertet Buttons "links" und "rechts" aus und in- bzw.
+* 				dekrementiert die Richtungsvariable entsprechend um 1, was
+* 				einer 90 Grad-Drehung entspricht. Setzt anschließend das zu
+* 				Beginn abgefragte Tastenauswertungsflag
 * 
 * Subroutinen:	b_player1_U() aus AdaVRuit.h 
 * 				b_player1_D() aus AdaVRuit.h 
@@ -148,37 +153,40 @@ void makeFood(uint8_t playInit)
 * 
 * Globale Var.:	uint8_t buttonRead, direction; 
 ******************************************************************************/ 
-uint8_t checkButtons(uint8_t ui_buttons)
+uint8_t ui_checkButtons(uint8_t ui_buttons)
 {
 	/* Abbruchbedingung */
 	if(b_player1_U(ui_buttons) && b_player1_D(ui_buttons) && b_player1_L(ui_buttons) && b_player1_R(ui_buttons)) {
 		return 0;
 	}
-	if(!buttonRead)	//Buttoneingabe bereits geschehen?
+	if(!ui_buttonRead)	//Buttoneingabe bereits geschehen?
 	{
-		int currentDirection = direction;
+		int currentDirection = ui_direction;
 		if(b_player_L(ui_buttons) == 1)		
 		{
-			direction--;
-			if(direction < 0) direction = LEFT;			
+			ui_direction--;
+			if(ui_direction < 0) ui_direction = LEFT;
 		}
 		else if(b_player_R(ui_buttons) == 1)	
 		{
-			direction++;
-			if(direction > 3) direction = UP;
+			ui_direction++;
+			if(ui_direction > 3) ui_direction = UP;
 		}
 		/* setze Flag "Buttoneingabe registriert" */
-		buttonRead = (currentDirection != direction);	
+		ui_buttonRead = (currentDirection != ui_direction);
 	}
 	return 1;
 }
 
 /***************************************************************************** 
 * Name:			nextstep 
-* Beschreibung:	Bewegt zuerst den Schlangenkoerper um eine Position und anschließend den Kopf (erste Position)
-* 				entsprechend der aktuellen Bewegungsrichtung weiter. Falls der Kopf dabei auf das Futter trifft,
-* 				wird die Laenge der Schlange um 1 inkrementiert. Hat die Schlange danach noch nicht ihre maximale
-* 				Laenge erreicht, wird die Funktion zur Erstellung einer neuen Futter-Struktur aufgerufen.
+* Beschreibung:	Bewegt zuerst den Schlangenkoerper um eine Position und
+* 				anschließend den Kopf (erste Position) entsprechend der
+* 				aktuellen Bewegungsrichtung weiter. Falls der Kopf dabei auf
+* 				das Futter trifft, wird die Laenge der Schlange um 1
+* 				inkrementiert. Hat die Schlange danach noch nicht ihre maximale
+* 				Laenge erreicht, wird die Funktion zur Erstellung einer neuen
+* 				Futter-Struktur aufgerufen.
 * 
 * Subroutinen:	makeFood(); 
 * 
@@ -203,7 +211,7 @@ void nextstep()
 		snake.snakeY[i] = snake.snakeY[i-1];
 	}
 	/* Bewegung Kopf */
-	switch(direction)				
+	switch(ui_direction)
 	{
 		case UP:
 			snake.snakeY[0] = snake.snakeY[0]+1;
@@ -234,8 +242,9 @@ void nextstep()
 
 /***************************************************************************** 
 * Name:			drawSnake
-* Beschreibung:	Diese Funktion gibt die aktuelle Position des Futters und nach Ueberpruefung 
-* 				auch die Bewebung der Schlange auf der LED Matrix aus. 
+* Beschreibung:	Diese Funktion gibt die aktuelle Position des Futters und nach
+* 				Überpruefung auch die Bewebung der Schlange auf der LED Matrix
+* 				aus.
 * 
 * Subroutinen:	clearDisplay() aus AdaVRuit.h
 * 				printBit() aus AdaVRuit.h 
@@ -263,13 +272,14 @@ void drawSnake()
 
 /***************************************************************************** 
 * Name:			initSnake
-* Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Es wird die Schlange 
-*				Snake initialisiert und  relativ mittig (Zeile 4 Spalte 4)  
-* 				auf dem Spielfeld positioniert. 
-* 				Anschließend wird an zufaelliger Position das erste Futter positioniert 
+* Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Es wird die
+* 				Schlange Snake initialisiert und  relativ mittig (Zeile 4
+* 				Spalte 4) auf dem Spielfeld positioniert.
+* 				Anschließend wird an zufaelliger Position das erste Futter
+* 				positioniert
 * 
 * Subroutinen:	makeFood()
-* 			clearDisplay()  aus AdaVRuit.h
+* 				clearDisplay()  aus AdaVRuit.h
 *				
 * 
 * Rückgabewert:	keine 
@@ -321,11 +331,11 @@ void playSnake()
 	{
 		/* Eingangspins aufnehmen */
 		ui_buttons = ui_input();	
-		play = checkButtons(ui_buttons);
+		play = ui_checkButtons(ui_buttons);
 		if (ui_timerFlag==1)
 		{
 			nextstep();
-			buttonRead = FALSE;
+			ui_buttonRead = FALSE;
 			ui_timerFlag = 0;
 			drawSnake();
 		}

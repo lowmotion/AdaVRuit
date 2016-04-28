@@ -1,33 +1,34 @@
- /*****************************************************************************
+/*****************************************************************************
 *
-* FILE: 	 	main.c
-* PROJECT:	      	Spielekonsole
-* MODULE:		???
+* Datei: 		main.c
+* Kurs:			TEN14
+* Projekt:		Spielekonsole
+* Modul:		Zentrale Einheit
 *
-* Description:		Hauptprogramm
+* Beschreibung:	Diese Datei enthält den Startpunkt des Programms und führt
+* 				alle Module zusammen.
 *
-* Notes:		-
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
 *
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date:   11.02.2016
-* BY:	  Michel, Marco, Michael, Christian, Tobias
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 
 #include "main.h"
 
- /**************************************************************************
-* NAME:			main
-* Description:		????? Wir haben schon eine main	?????
+/*****************************************************************************
+* Name:			main
+* Beschreibung:	Startpunkt des Programmes. Startet das System und sorgt dafür,
+* 				dass den Mikrokontroller nicht abschaltet, falls ein Fehler
+* 				auftritt und das Menü verlassen wird.
 *
-* Subroutines Called:	???
+* Subroutinen:	keine
 *
-* Returns:		int = 0;
+* Rückgabewert:	keine
 *
-* Globals:		???
-**************************************************************************/
+* Globale Var.:	keine
+******************************************************************************/
 int main() {
 	initSystem();
 	menu();

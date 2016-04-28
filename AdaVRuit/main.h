@@ -1,18 +1,17 @@
- /*****************************************************************************
+/*****************************************************************************
 *
-* FILE: 		      main.h
-* PROJECT:	      Spielekonsole
-* MODULE:		      ???
+* Datei: 		main.h
+* Kurs:			TEN14
+* Projekt:		Spielekonsole
+* Modul:		Zentrale Einheit
 *
-* Description:		Header zu main.c
+* Beschreibung:	Diese Datei enthält den Startpunkt des Programms und führt
+* 				alle Module zusammen.
 *
-* Notes:		-
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
 *
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date:   11.02.2016
-* BY:	    Michel, Marco, Michael, Christian, Tobias
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 

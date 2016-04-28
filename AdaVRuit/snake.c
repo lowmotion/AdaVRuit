@@ -1,10 +1,27 @@
+/***************************************************************************** 
+* 
+* Datei: 		snake.c 
+* Kurs:			TEN14 
+* Projekt:		Spielekonsole 
+* Modul:		Spiel Snake
+* 
+* Beschreibung:	Diese Datei enthällt die Hauptroutine und alle Funktionen des 
+* 				Spiels "Snake" 
+* 
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Tobias Mages, Christian Wagner 
+* 
+* Datum: 		28.04.2016 
+* 
+*****************************************************************************/ 
 
 #include "snake.h"
 
-uint8_t direction = UP;		//Bewegungsrichtung
-
-//	Struktur:		Snake
-//	Beschreibung:	Diese Struktur stellt die gesteuerte Schlange dar.	
+/***************************************************************************** 
+* Name:			Snake 
+* Beschreibung:	Diese Struktur stellt die vom Spieler gesteuerte Schlange dar. 
+* 				Sie beinhaltet Informationen über die derzeitige und 
+* 				vorherige(eraseX/Y) Position, sowie die momentane Länge 
+*****************************************************************************/ 
 struct Snake	{
 	uint8_t snakeX[MAX_LENGTH];	//X-Koordinaten
 	uint8_t snakeY[MAX_LENGTH];	//Y-Koordinaten
@@ -13,30 +30,58 @@ struct Snake	{
 	} snake;
 
 
-//	Struktur:		Food
-//	Beschreibung:	Diese Struktur stellt das zu fressende Futter dar.
+/***************************************************************************** 
+* Name:			Food 
+* Beschreibung:	Diese Struktur stellt das Futter dar und beinhaltet seine 
+* 				aktuelle Position und eine Variable für die Anzeige-LED, um
+* 				eventuelle Anzeigeeffekte, wie Blinken beim Erscheinen umzusetzen
+37  *****************************************************************************/ 
 struct Food		{
 	uint8_t foodX, foodY;
 	uint8_t foodLED;		//f�r eventuelle Anzeigeeffekte
 	} food;
 	
-//Globale Variablen
+/************************** 
+* GLOBALE VARIABLEN 
+**************************/ 
 
+/*Bewegungsrichtung*/
+uint8_t direction = UP;		
 
-//f�r Button-Abfrage
+/*fuer Button-Abfrage*/
 uint8_t buttonRead = FALSE;
 
-/*
-//f�r delay in mainloop
-unsigned long prevTime = 0;
+/*fuer delay in mainloop*/
+/*unsigned long prevTime = 0;
 unsigned long delayTime = 500;
 */
+
+/***************************************************************************** 
+* Name:			random 
+* Beschreibung:	Diese Funktion erstellt einen Zufallswert und gibt diesen zurück
+* 
+* Subroutinen:	keine
+* 
+* Rückgabewert:	uint8_t: zwischen 0 und Parameter des Ausrufs 
+* 
+* Globale Var.:	keine
+******************************************************************************/ 
 uint8_t random(uint8_t max)
 {
 	return TCNT1L % max;
 }
 
-//�berpr�ft, ob die Position bereits von der Schlange belegt ist
+/***************************************************************************** 
+* Name:			PartOfSnake* 
+* Beschreibung:	Diese Funktion ueberprueft, ob die Kombination ihrer zwei Eingabeparameter
+* 				einem der aktuellen Koordinatenpaare der Snake-Struktur entspricht
+* 
+* Subroutinen:	keine 
+* 
+* Rückgabewert:	uint8_t: TRUE/1 oder FALSE/0 
+* 
+* Globale Var.:	struct Snake snake; 
+******************************************************************************/ 
 uint8_t PartOfSnake(uint8_t x, uint8_t y)
 {
 	for (int i=0; i<snake.snakeLength; i++)
@@ -46,17 +91,30 @@ uint8_t PartOfSnake(uint8_t x, uint8_t y)
 	return FALSE;
 }
 
-/*
-Funktion:		makeFood
-Beschreibung:	Diese Funktion erzeugt eine zuf�llige x-y-Position, gleicht sie mit der Schlange
-				ab und erzeugt gegebenenfalls eine neue Position. Anschlie�end werden die Werte in
-				den Positionsspeicher des Futters geschrieben.*/
+/***************************************************************************** 
+* Name:			makeFood 
+* Beschreibung:	Diese Funktion erzeugt ein zufaelliges x-y-Koordinatenpaar, gleicht dieses mit   
+*				der Schlange ab und erzeugt bei Uebereinstimmung eine neue Position. Anschließend
+* 				werden die Werte in den Positionsspeicher der Futter-Struktur geschrieben
+* 
+* Subroutinen:	printBit() aus AdaVRuit.h 
+*				random()
+* 				PartOfSnake() 
+*				_delay_ms() aus <util/delay.h> 
+* 
+* Rückgabewert:	keine
+* 
+* Globale Var.:	struct Food food; 
+******************************************************************************/ 
 void makeFood(uint8_t playInit)
 {
-	if (playInit == 1)	printBit(food.foodX, food.foodY, LED_OFF);	//letztes Futter l�schen
+	/* letztes Futter loeschen */
+	if (playInit == 1)	printBit(food.foodX, food.foodY, LED_OFF);
+	
 	uint8_t x = random(ROWS-1);
 	uint8_t y = random(COLUMNS-1);
-	while(PartOfSnake(x,y))		//Schlange bereits an neuer Futterposition?
+	/* Schlange bereits an neuer Futterposition? */
+	while(PartOfSnake(x,y))	
 	{
 		x = random(ROWS-1);
 		y = random(COLUMNS-1);
@@ -73,12 +131,23 @@ void makeFood(uint8_t playInit)
 	}
 }
 
-/*
-Funktion:		checkButtons
-Beschreibung:	�berpr�ft, ob eine Eingabe im aktuellen Spielzyklus bereits registriert wurde.
-				Falls nicht, werden die Buttons `links� und `rechts� ausgewertet und gegebenenfalls
-				die Richtungsvariable um 1 in- oder dekrementiert, was einer Drehung um 90� entspricht
-				Anschlie�end wird ein Flag f�r die erfolgte Tastenauswertung gesetzt*/
+/***************************************************************************** 
+* Name:			checkButtons
+* Beschreibung:	Ueberprueft, ob bereits eine Eingabe im aktuellen Spielzyklus registriert wurde. 
+* 				Wenn nein:
+* 				Wertet Buttons "links" und "rechts" aus und in- bzw. dekrementiert die Richtungsvariable
+* 				entsprechend um 1, was einer 90 Grad-Drehung entspricht. Setzt anschließend das zu Beginn
+* 				abgefragte Tastenauswertungsflag
+* 
+* Subroutinen:	b_player1_U() aus AdaVRuit.h 
+* 				b_player1_D() aus AdaVRuit.h 
+* 				b_player1_L() aus AdaVRuit.h 
+* 				b_player1_R() aus AdaVRuit.h 
+* 
+* Rückgabewert:	uint8_t: 1 oder 0 
+* 
+* Globale Var.:	uint8_t buttonRead, direction; 
+******************************************************************************/ 
 uint8_t checkButtons(uint8_t ui_buttons)
 {
 	/* Abbruchbedingung */
@@ -98,23 +167,34 @@ uint8_t checkButtons(uint8_t ui_buttons)
 			direction++;
 			if(direction > 3) direction = UP;
 		}
-		buttonRead = (currentDirection != direction);	//Buttoneingabe registriert!
+		/* setze Flag "Buttoneingabe registriert" */
+		buttonRead = (currentDirection != direction);	
 	}
 	return 1;
 }
 
-/*
-Funktion:		nextstep
-Beschreibung:	Die Funktion bewegt zuerst den Schlangenk�rper um eine Position weiter und anschlie�end
-				den Kopf entsprechend der aktuellen Bewegungsrichtung. Falls der Kopf dabei auf das Futter
-				trifft, wird die L�nge der Schlange um 1 inkrementiert. Hat Snake danach noch nicht seine
-				maximale L�nge erreicht, wird eine Funktion zum neuen Setzen des Futters aufgerufen */
+/***************************************************************************** 
+* Name:			nextstep 
+* Beschreibung:	Bewegt zuerst den Schlangenkoerper um eine Position und anschließend den Kopf (erste Position)
+* 				entsprechend der aktuellen Bewegungsrichtung weiter. Falls der Kopf dabei auf das Futter trifft,
+* 				wird die Laenge der Schlange um 1 inkrementiert. Hat die Schlange danach noch nicht ihre maximale
+* 				Laenge erreicht, wird die Funktion zur Erstellung einer neuen Futter-Struktur aufgerufen.
+* 
+* Subroutinen:	makeFood(); 
+* 
+* Rückgabewert:	keine
+* 
+* Globale Var.:	struct Snake snake; 
+*				uint8_t direction; 
+******************************************************************************/ 
 void nextstep()
 {
 	uint8_t play1 = 1;
-	for(int i=snake.snakeLength-1; i>0; i--)	//Bewegung Schlangenk�rper
+	/* Bewegung Schlangenkoerper */
+	for(int i=snake.snakeLength-1; i>0; i--)
 	{
-		/*if (snake.snakeX[i+1] == -1)		//eventuelles L�schbit f�r Ausgabe vorbereiten
+		/* eventuelles Loeschbit fuer Ausgabe vorbereiten */
+		/*if (snake.snakeX[i+1] == -1)	
 		{
 			snake.eraseX = snake.snakeX[i];
 			snake.eraseY = snake.snakeY[i];
@@ -122,7 +202,8 @@ void nextstep()
 		snake.snakeX[i] = snake.snakeX[i-1];
 		snake.snakeY[i] = snake.snakeY[i-1];
 	}
-	switch(direction)					//Bewegung Kopf
+	/* Bewegung Kopf */
+	switch(direction)				
 	{
 		case UP:
 			snake.snakeY[0] = snake.snakeY[0]+1;
@@ -141,45 +222,70 @@ void nextstep()
 			if (snake.snakeX[0]<0)		snake.snakeX[0]=COLUMNS-1;
 			break;
 	}
-	if((snake.snakeX[0] == food.foodX) && (snake.snakeY[0] == food.foodY))	//Futter erreicht?
+	/* Futter erreicht? */
+	if((snake.snakeX[0] == food.foodX) && (snake.snakeY[0] == food.foodY))
 	{
 		snake.snakeLength++;
 		if (snake.snakeLength < MAX_LENGTH) makeFood(play1);
-		else food.foodX = food.foodY = -1;						//maximales Wachstum erreicht
+		/* maximales Wachstum erreicht */
+		else food.foodX = food.foodY = -1;					
 	}
 }
 
-/*
-Funktion:		drawSnake
-Beschreibung:	Schreibt die aktuelle Position des Futters in den Anzeigespeicher. �berpr�ft 
-				jedes einzelne Glied der Schlange und schreibt die Positionen
-				in den Anzeigespeicher. L�scht zuletzt die "Spur" der Schlange */
+/***************************************************************************** 
+* Name:			drawSnake
+* Beschreibung:	Diese Funktion gibt die aktuelle Position des Futters und nach Ueberpruefung 
+* 				auch die Bewebung der Schlange auf der LED Matrix aus. 
+* 
+* Subroutinen:	clearDisplay() aus AdaVRuit.h
+* 				printBit() aus AdaVRuit.h 
+* 
+* Rückgabewert:	keine
+* 
+* Globale Var.:	struct Food food; 
+*				struct Snake snake;
+******************************************************************************/ 
 void drawSnake()
 {	
 	clearDisplay();
-	//Futter
+	/* Futter */
 	if(food.foodX>=0 && food.foodX<ROWS && food.foodY>=0 && food.foodY<COLUMNS) printBit(food.foodX, food.foodY, food.foodLED);
-	//Snake
+	/* Snake */
 	for(int i=0; i<snake.snakeLength; i++)
 	{
-		if (snake.snakeX[i] == -1) break;		//�berpr�fen, ob bereits aktuelles Ende der Schlange erreicht
+		/* Pruefung, ob bereits aktuelles Ende der Schlange erreicht */
+		if (snake.snakeX[i] == -1) break;		
 		printBit(snake.snakeX[i], snake.snakeY[i], LED_ON);
 	}
+	/* Loeschen der "Spur" der Schlange */
 	//printBit(snake.eraseX, snake.eraseY, LED_OFF);
 }
 
-/*
-	Funktion:		initSnake
-	Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Die Startposition der Schlange
-					wird initialisiert und der restliche Schlangenk�rper wird "gel�scht".
-					Anschlie�end wird die Position des ersten Futters initialisiert.*/
+/***************************************************************************** 
+* Name:			initSnake
+* Beschreibung:	Diese Funktion initialisiert das Spiel Snake. Es wird die Schlange 
+*				Snake initialisiert und  relativ mittig (Zeile 4 Spalte 4)  
+* 				auf dem Spielfeld positioniert. 
+* 				Anschließend wird an zufaelliger Position das erste Futter positioniert 
+* 
+* Subroutinen:	makeFood()
+* 			clearDisplay()  aus AdaVRuit.h
+*				
+* 
+* Rückgabewert:	keine 
+* 
+* Globale Var.:	struct Snake snake 
+*				struct Food food 
+******************************************************************************/ 
 void initSnake(uint8_t play0)
 {
 	clearDisplay();
 	snake.snakeLength=1;
-	snake.snakeX[0] = 4;	//Startposition
+	/* Startposition */
+	snake.snakeX[0] = 4;	
 	snake.snakeY[0] = 4;
-	for(int i=1; i<MAX_LENGTH; i++)	//restliche Glieder "abschalten"
+	/* restliche Glieder "abschalten" */
+	for(int i=1; i<MAX_LENGTH; i++)	
 	{
 		snake.snakeX[i] = snake.snakeY[i] = -1;
 	}
@@ -187,12 +293,21 @@ void initSnake(uint8_t play0)
 	makeFood(play0);
 }
 
-/*
-Funktion:		playSnake
-Beschreibung:	Die Funktion ruft zuerst die Initialisierung auf. Die anschlie�ende Schleife fr�gt als 1. ab,
-				ob die Richtung per Eingabe ge�ndert wurde. Nach der Zeit eines "Spielzyklus�"
-				werden alle Echtzeitfunktionen einmal ausgef�hrt. Zuletzt werden alle neuen Positionen
-				in die Ausgabe geschrieben*/
+/***************************************************************************** 
+* Name:			playSnake
+* Beschreibung:	Hauptroutine des Spiels Snake 
+* 
+* Subroutinen:	_delay_ms() aus <util/delay.h>	 
+* 				initSnake() 
+* 				ui_input() aus AdaVRuit.h 
+* 				checkButtons() 
+* 				nextstep() 
+* 				drawSnake() 
+* 
+* Rückgabewert:	keine
+* 
+* Globale Var.:	int8_t ui_timerFlag  aus AdaVRuit.h *  
+******************************************************************************/ 
 void playSnake()
 {
 	uint8_t play = 0;
@@ -204,7 +319,8 @@ void playSnake()
 
 	while (play)
 	{
-		ui_buttons = ui_input();	//nimmt Eingangspins auf
+		/* Eingangspins aufnehmen */
+		ui_buttons = ui_input();	
 		play = checkButtons(ui_buttons);
 		if (ui_timerFlag==1)
 		{
@@ -216,6 +332,5 @@ void playSnake()
 		ui_buttons = 0;
 	}
 	_delay_ms(500);
-
 }
 

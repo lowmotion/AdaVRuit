@@ -1,35 +1,35 @@
 /*****************************************************************************
 *
-* FILE: 		twi.c
-* PROJECT:		Spielekonsole
-* MODULE:		???
+* Datei: 		twi.c
+* Kurs:			TEN14
+* Projekt:		Spielekonsole
+* Modul:		Zentrale Einheit
 *
-* Description:		Diese Datei enthällt sllr Funktionen zur Verwendung es TWI
+* Beschreibung:	Dieses Modul lagert wichtige Funktionen aus, die für die
+* 				Verwendung von TWi (I²C) benötigt werden.
 *
-* Notes:		-
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Christian Wagner,
+* 				Tobias Mages
 *
-* Compiler dependencies or special instructions:
-*
-* REVISION HISTORY
-* Date: 02.03.2016
-* BY:	Michel, Marco, Michael, Christian, Tobias
+* Datum: 		26.04.2016
 *
 *****************************************************************************/
 #include "twi.h"
 
-/**************************************************************************
-* NAME:			twi_init
-* Description:		DInitialisiert die TWI Schnittstelle, welche zu I2C kompatibel ist.
-* 			Dazu wird die Clock (SCL) eingerichtet. Der Prescaler (TWPS) wird immer auf "0 0" gesetzt.
-* 			Der Faktor TWBR wird anhand der Formel aus dem Datenblatt über die Precompiler Definitionen
-* 			ausgerechnet.
+/*****************************************************************************
+* Name:			twi_init
+* Beschreibung:	Initialisiert die TWI Schnittstelle, welche zu I2C kompatibel
+* 				ist. Dazu wird die Clock (SCL) eingerichtet. Der Prescaler
+* 				(TWPS) wird immer auf "0 0" gesetzt. Der Faktor TWBR wird
+* 				anhand der Formel aus dem Datenblatt über die Precompiler
+* 				Definitionen ausgerechnet.
 *
-* Subroutines Called:	keine
+* Subroutinen:	keine
 *
-* Returns:		keine
+* Rückgabewert:	keine
 *
-* Globals:		keine
-**************************************************************************/
+* Globale Var.:	keine
+******************************************************************************/
 void twi_init(void)
 {
 	/* Prescaler = 1 */
@@ -39,21 +39,20 @@ void twi_init(void)
 
 }
 
-
-/**************************************************************************
-* NAME:			twi_start
-* Description:		Sendet das Startbit und danach die mitgegebene Adresse auf den TWI/I2C-Bus.
-* 			Prüft ob das Gerät erreichbar ist.
+/*****************************************************************************
+* Name:			twi_start
+* Beschreibung:	Sendet das Startbit und danach die mitgegebene Adresse auf
+* 				den TWI/I2C-Bus. Prüft ob das Gerät erreichbar ist.
 *
-* Subroutines Called:	keine
+* Subroutinen:	keine
 *
-* Returns:		uint8_t:
- * 				0 = Gerät erreicht
- * 				1 = Gerät nicht erreicht
+* Rückgabewert:	uint8_t:
+* 				0 = Gerät erfolgreich erreicht
+* 				1 = Fehler, Gerät antwortet nicht
 *
-* Globals:		keine
-**************************************************************************/
-uint8_t twi_start(uint8_t address)
+* Globale Var.:	keine
+******************************************************************************/
+uint8_t ui_twi_start(uint8_t address)
 {
 	uint8_t   twst;
 
@@ -83,17 +82,17 @@ uint8_t twi_start(uint8_t address)
 	return 0;
 }
 
-
- /**************************************************************************
-* NAME:			twi_stop
-* Description:		Schließt die Aktulle Übertragung ab und gibt den TWI/I2C-Bus wieder frei.
+/*****************************************************************************
+* Name:			twi_stop
+* Beschreibung:	Schließt die aktulle Übertragung ab und gibt den TWI/I²C-Bus
+* 				wieder frei.
 *
-* Subroutines Called:	keine
+* Subroutinen:	keine
 *
-* Returns:		keine
-* 
-* Globals:		keine
-**************************************************************************/
+* Rückgabewert:	keine
+*
+* Globale Var.:	keine
+******************************************************************************/
 void twi_stop(void)
 {
 	/* Sende Stop Bit */
@@ -105,21 +104,21 @@ void twi_stop(void)
 	/* Bus wieder freigegeben */
 }
 
-
-  /**************************************************************************
-* NAME:			twi_write
-* Description:		Sendet ein Byte über den TWI/I2C-Bus und prüft, ob das Byte angekommen ist.
-* 			Die Funktion twi_start muss vorher aufgerufen werden.
+/*****************************************************************************
+* Name:			twi_write
+* Beschreibung:	Sendet ein Byte über den TWI/I2C-Bus und prüft, ob das Byte
+* 				angekommen ist. Die Funktion twi_start muss vorher aufgerufen
+* 				werden.
 *
-* Subroutines Called:	keine
+* Subroutinen:	keine
 *
-* Returns:		Uint8_t:
+* Rückgabewert:	uint8_t:
 * 				0 = Byte erfolgreich übertragen
-* 				1 = Kein vom Empfänger ACK erhalten
-* 
-* Globals:		keine
-**************************************************************************/
-uint8_t twi_write(uint8_t data)
+* 				1 = kein ACK vom Empfänger erhalten
+*
+* Globale Var.:	keine
+******************************************************************************/
+uint8_t ui_twi_write(uint8_t data)
 {
 	uint8_t   twst;
 

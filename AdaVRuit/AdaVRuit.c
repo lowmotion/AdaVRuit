@@ -96,12 +96,12 @@ void initTWI() {
 ******************************************************************************/
 void clearDisplay() {
 	cli();
-	twi_start(SLAVE_ADRESS);
-	twi_write(0x00);	// Startadresse des Displayspeichers
+	ui_twi_start(SLAVE_ADRESS);
+	ui_twi_write(0x00);	// Startadresse des Displayspeichers
 	for(short row = 0; row < 8; row++) {
 		for(short column = 0; column < 2; column++) {
 			matrix[row] = 0;
-			twi_write(0);
+			ui_twi_write(0);
 		}
 	}
 	twi_stop();
@@ -125,26 +125,26 @@ void clearDisplay() {
 ******************************************************************************/
 void initDisplay(uint8_t brightness) {
 	/* LED Treiber anschalten */
-	twi_start(SLAVE_ADRESS);
-	twi_write(0x21);
+	ui_twi_start(SLAVE_ADRESS);
+	ui_twi_write(0x21);
 	twi_stop();
 
 	/* Helligkeit des Displays einstellen */
 	if(brightness > 15) {
-		twi_start(SLAVE_ADRESS);
-		twi_write(0xEF);
+		ui_twi_start(SLAVE_ADRESS);
+		ui_twi_write(0xEF);
 		twi_stop();
 	} else {
-		twi_start(SLAVE_ADRESS);
-		twi_write(0xE0+brightness);
+		ui_twi_start(SLAVE_ADRESS);
+		ui_twi_write(0xE0+brightness);
 		twi_stop();
 	}
 
 	clearDisplay();
 
 	/* Display anschalten */
-	twi_start(SLAVE_ADRESS);
-	twi_write(0x81);
+	ui_twi_start(SLAVE_ADRESS);
+	ui_twi_write(0x81);
 	twi_stop();
 }
 
@@ -264,9 +264,9 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 			matrix[ui_row] &= ~(1 << ui_column);
 			highByte = FALSE;
 		}
-		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2)+highByte);
-		twi_write(matrix[ui_row] >> (highByte * 8));
+		ui_twi_start(SLAVE_ADRESS);
+		ui_twi_write((ui_row*2)+highByte);
+		ui_twi_write(matrix[ui_row] >> (highByte * 8));
 		twi_stop();
 		break;
 	case LED_ON:
@@ -277,9 +277,9 @@ void printBit(uint8_t ui_row, uint8_t ui_column, uint8_t ui_ledState) {
 			matrix[ui_row] |= (1 << ui_column);
 			highByte = 0;
 		}
-		twi_start(SLAVE_ADRESS);
-		twi_write((ui_row*2)+highByte);
-		twi_write(matrix[ui_row] >> (highByte * 8));
+		ui_twi_start(SLAVE_ADRESS);
+		ui_twi_write((ui_row*2)+highByte);
+		ui_twi_write(matrix[ui_row] >> (highByte * 8));
 		twi_stop();
 		break;
 	}
@@ -314,11 +314,11 @@ void printArray(uint16_t ui_matrix[8]) {
 		}
 	}
 
-	twi_start(SLAVE_ADRESS);
-	twi_write(0x00);	// Startadresse des Displayspeichers
+	ui_twi_start(SLAVE_ADRESS);
+	ui_twi_write(0x00);	// Startadresse des Displayspeichers
 	for(short row = 0; row < 8; row++) {
-		twi_write(bitSwappedByte[row]);
-		twi_write(bitSwappedByte[row] >> 8);
+		ui_twi_write(bitSwappedByte[row]);
+		ui_twi_write(bitSwappedByte[row] >> 8);
 	}
 	twi_stop();
 	sei();

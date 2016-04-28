@@ -5,9 +5,11 @@
 * Projekt:		Spielekonsole 
 * Modul:		Zentrale Einheit 
 * 
-* Beschreibung:	Diese Datei enthält die Hauptroutine und alle Funktionen des Spiels "Snake"
+* Beschreibung:	Diese Datei enthält die Hauptroutine und alle Funktionen des
+* 				Spiels "Snake"
 * 
-* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Tobias Mages, Christian Wagner 
+* Autor:		Michel Denniger, Marco Jedzig, Michael Karp, Tobias Mages,
+* 				Christian Wagner
 * 				 
 * 
 * Datum: 		28.04.2016 
@@ -43,18 +45,18 @@
  ****************/
  
 /*****************************************************************************  
-* Name:			playSnake  
+* Name:				playSnake
 * Beschreibung:		Hauptroutine des Spiels Snake  
 *  
 * Subroutinen:		_delay_ms() aus <util/delay.h>	  
-* 			initSnake() 
-*       random()
-*       PartOfSnake()
-*       makeFood()
-* 			ui_input() aus AdaVRuit.h  
-* 			checkButtons()  
-* 			nextstep()  
-* 			drawSnake()  
+* 					initSnake()
+*      				random()
+*       			PartOfSnake()
+*       			makeFood()
+* 					ui_input() aus AdaVRuit.h
+* 					checkButtons()
+* 					nextstep()
+* 					drawSnake()
 * 			  
 * Rückgabewert:		keine  
 *  
